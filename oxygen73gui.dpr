@@ -2,7 +2,7 @@ program oxygen73gui;
 
 uses
   Vcl.Forms,
-  Unit1 in 'Unit1.pas' {Form1},
+  UnitFormOxygen73 in 'UnitFormOxygen73.pas' {FormOxygen73},
   mainsvc in 'gen-delphi\mainsvc.pas',
   Thrift.Collections in 'thrift\Thrift.Collections.pas',
   Thrift.Exception in 'thrift\Thrift.Exception.pas',
@@ -31,17 +31,33 @@ uses
   vclutils in 'utils\vclutils.pas',
   UnitFormChart in 'UnitFormChart.pas' {FormChart},
   apitypes in 'gen-delphi\apitypes.pas',
-  guiserver in 'guiserver.pas',
-  guisvc in 'gen-delphi\guisvc.pas';
+  logfile in 'logfile.pas',
+  api.notify in 'api\api.notify.pas',
+  Grijjy.Bson in 'grijjy\Grijjy.Bson.pas',
+  Grijjy.Bson.Serialization in 'grijjy\Grijjy.Bson.Serialization.pas',
+  Grijjy.SysUtils in 'grijjy\Grijjy.SysUtils.pas',
+  Grijjy.DateUtils in 'grijjy\Grijjy.DateUtils.pas',
+  Grijjy.Bson.IO in 'grijjy\Grijjy.Bson.IO.pas',
+  Grijjy.BinaryCoding in 'grijjy\Grijjy.BinaryCoding.pas',
+  Grijjy.Collections in 'grijjy\Grijjy.Collections.pas',
+  UnitFormJournal in 'UnitFormJournal.pas' {FormJournal},
+  UnitFormConsole in 'UnitFormConsole.pas' {FormConsole},
+  UnitFormPopup in 'UnitFormPopup.pas' {FormPopup},
+  myutils in 'utils\myutils.pas';
 
 {$R *.res}
 
 begin
-  Application.Initialize;
-  Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TForm1, Form1);
+
+    Application.Initialize;
+    Application.MainFormOnTaskbar := True;
+    Application.CreateForm(TFormOxygen73, FormOxygen73);
   Application.CreateForm(TFormChart, FormChart);
   Application.CreateForm(TFormProducts, FormProducts);
   Application.CreateForm(TFormCatalogue, FormCatalogue);
+  Application.CreateForm(TFormJournal, FormJournal);
+  Application.CreateForm(TFormConsole, FormConsole);
+  Application.CreateForm(TFormPopup, FormPopup);
   Application.Run;
+
 end.

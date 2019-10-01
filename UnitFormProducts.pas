@@ -179,7 +179,7 @@ begin
     r := Rect;
 
     r.Left := r.Left + 20;
-    DrawCellText(StringGrid1, ACol, ARow, r, taLeftJustify, ser.Title);
+    StringGrid_DrawCellText(StringGrid1, ACol, ARow, r, taLeftJustify, ser.Title);
 
     r.Left := r.Left + 40;
     d := round(r.Top + r.Height / 2);
@@ -190,8 +190,8 @@ begin
 
     if ser.YValues.Count > 0 then
     begin
-        r.Left := r.Left + 22;
-        DrawCellText(StringGrid1, ACol, ARow, r, taLeftJustify,
+        r.Left := r.Left + 60;
+        StringGrid_DrawCellText(StringGrid1, ACol, ARow, r, taLeftJustify,
           FloatToStr(ser.YValues[ser.YValues.Count - 1]));
     end;
 
@@ -219,7 +219,7 @@ begin
     r.Left := r.Left + 20;
 
     cnv.Font.Style := [fsBold];
-    DrawCellText(StringGrid1, ACol, ARow, r, taLeftJustify,
+    StringGrid_DrawCellText(StringGrid1, ACol, ARow, r, taLeftJustify,
       inttostr(ACol * 10 + ARow + 1));
     cnv.Font.Style := [];
 
@@ -236,7 +236,7 @@ begin
     if product.Serial <> 0 then
     begin
         cnv.Font.Style := [fsItalic];
-        DrawCellText(StringGrid1, ACol, ARow, r, taLeftJustify,
+        StringGrid_DrawCellText(StringGrid1, ACol, ARow, r, taLeftJustify,
           inttostr(product.Serial));
         cnv.Font.Style := [];
     end;
@@ -244,7 +244,7 @@ begin
     if ser.YValues.Count > 0 then
     begin
         r.Left := r.Left + 60;
-        DrawCellText(StringGrid1, ACol, ARow, r, taLeftJustify,
+        StringGrid_DrawCellText(StringGrid1, ACol, ARow, r, taLeftJustify,
           FloatToStr(ser.YValues[ser.YValues.Count - 1]));
     end;
     // StringGrid_DrawCellBounds(cnv, ACol, ARow, Rect);

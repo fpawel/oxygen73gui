@@ -11,7 +11,8 @@ procedure Connect;
 
 implementation
 
-uses System.SysUtils, registry, winapi.windows, Thrift.Protocol, Thrift.Transport;
+uses System.SysUtils, registry, winapi.windows, Thrift.Protocol, Thrift.Transport,
+  logfile;
 
 procedure Connect;
 var

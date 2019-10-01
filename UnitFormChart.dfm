@@ -57,8 +57,6 @@ object FormChart: TFormChart
     BevelOuter = bvNone
     Color = clWindow
     TabOrder = 0
-    ExplicitTop = 0
-    ExplicitHeight = 299
     DefaultCanvas = 'TGDIPlusCanvas'
     ColorPaletteIndex = -2
     ColorPalette = (
@@ -94,8 +92,6 @@ object FormChart: TFormChart
     ParentBackground = False
     ParentFont = False
     TabOrder = 1
-    ExplicitLeft = -231
-    ExplicitWidth = 866
     object ToolBar1: TToolBar
       Left = 569
       Top = 0
@@ -108,7 +104,6 @@ object FormChart: TFormChart
       EdgeOuter = esNone
       Images = ImageList1
       TabOrder = 0
-      ExplicitLeft = 800
       object ToolButton1: TToolButton
         Left = 0
         Top = 0
@@ -141,7 +136,6 @@ object FormChart: TFormChart
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 1
-      ExplicitWidth = 768
       object GridPanel1: TGridPanel
         Left = 0
         Top = 0
@@ -180,9 +174,6 @@ object FormChart: TFormChart
             Value = 100.000000000000000000
           end>
         TabOrder = 0
-        ExplicitTop = 10
-        ExplicitWidth = 768
-        ExplicitHeight = 22
         object MemoX: TMemo
           AlignWithMargins = True
           Left = 3
@@ -206,10 +197,6 @@ object FormChart: TFormChart
           TabOrder = 0
           WordWrap = False
           OnMouseMove = MemoXMouseMove
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 384
-          ExplicitHeight = 22
         end
         object MemoY1: TMemo
           AlignWithMargins = True
@@ -234,10 +221,6 @@ object FormChart: TFormChart
           TabOrder = 1
           WordWrap = False
           OnMouseMove = MemoXMouseMove
-          ExplicitLeft = 384
-          ExplicitTop = 0
-          ExplicitWidth = 384
-          ExplicitHeight = 22
         end
         object MemoY2: TMemo
           AlignWithMargins = True
@@ -262,10 +245,6 @@ object FormChart: TFormChart
           TabOrder = 2
           WordWrap = False
           OnMouseMove = MemoXMouseMove
-          ExplicitLeft = 384
-          ExplicitTop = 0
-          ExplicitWidth = 384
-          ExplicitHeight = 22
         end
       end
     end

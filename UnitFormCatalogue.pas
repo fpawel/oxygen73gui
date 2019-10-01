@@ -35,12 +35,8 @@ implementation
 
 {$R *.dfm}
 
-uses dateutils, Unit1, UnitFormProducts, math, UnitFormChart;
+uses myutils, dateutils, UnitFormOxygen73, UnitFormProducts, math, UnitFormChart;
 
-function unixMillisToDateTime(t: int64): TDateTime;
-begin
-    result := IncMilliSecond(EncodeDateTime(1970, 1, 1, 0, 0, 0, 0), t);
-end;
 
 function formatPartyTime(t: int64): string;
 begin
@@ -159,7 +155,7 @@ begin
         cnv.Font.Style := [];
     end;
 
-    DrawCellText(StringGrid1, ACol, ARow, Rect, ta,
+    StringGrid_DrawCellText(StringGrid1, ACol, ARow, Rect, ta,
       StringGrid1.Cells[ACol, ARow]);
     // StringGrid_DrawCellBounds(cnv, acol, arow,  Rect);
 end;
@@ -178,7 +174,7 @@ begin
     buk := FBuckets[ARow - 1];
     party := MainSvcApi.getParty(buk.PartyID);
     with StringGrid1 do
-        Form1.Caption := Format('Загрузка №%d от %s: %s - %s...%s',
+        FormOxygen73.Caption := Format('Загрузка №%d от %s: %s - %s...%s',
           [party.PartyID, formatPartyTime(party.CreatedAt), Cells[0, ARow],
           Cells[1, ARow], Cells[2, ARow]]);
     FormProducts.SetPartyID(party.PartyID);

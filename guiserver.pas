@@ -89,7 +89,9 @@ begin
             raise Exception.Create('cant open oxygen73\tcp');
         Transport := TServerSocketImpl.Create
           (TServerSocket.Create(key.ReadString('gui_ip'),
-          key.ReadInteger('gui_port')));
+          key.ReadInteger('gui_port'))
+          //,5000
+          );
 
         // TServerSocketImpl.Create
         // (TServerSocket.Create(key.ReadString('gui_ip'),

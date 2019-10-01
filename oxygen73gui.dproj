@@ -85,6 +85,8 @@
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
+        <Debugger_IncludeSystemVars>true</Debugger_IncludeSystemVars>
+        <Debugger_EnvVars>OXYGEN73_DEVMODE=true;$(Debugger_EnvVars)</Debugger_EnvVars>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -100,8 +102,8 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="Unit1.pas">
-            <Form>Form1</Form>
+        <DCCReference Include="UnitFormOxygen73.pas">
+            <Form>FormOxygen73</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="gen-delphi\mainsvc.pas"/>
@@ -141,8 +143,28 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="gen-delphi\apitypes.pas"/>
-        <DCCReference Include="guiserver.pas"/>
-        <DCCReference Include="gen-delphi\guisvc.pas"/>
+        <DCCReference Include="logfile.pas"/>
+        <DCCReference Include="api\api.notify.pas"/>
+        <DCCReference Include="grijjy\Grijjy.Bson.pas"/>
+        <DCCReference Include="grijjy\Grijjy.Bson.Serialization.pas"/>
+        <DCCReference Include="grijjy\Grijjy.SysUtils.pas"/>
+        <DCCReference Include="grijjy\Grijjy.DateUtils.pas"/>
+        <DCCReference Include="grijjy\Grijjy.Bson.IO.pas"/>
+        <DCCReference Include="grijjy\Grijjy.BinaryCoding.pas"/>
+        <DCCReference Include="grijjy\Grijjy.Collections.pas"/>
+        <DCCReference Include="UnitFormJournal.pas">
+            <Form>FormJournal</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="UnitFormConsole.pas">
+            <Form>FormConsole</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="UnitFormPopup.pas">
+            <Form>FormPopup</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="utils\myutils.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

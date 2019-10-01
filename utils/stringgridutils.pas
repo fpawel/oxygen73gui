@@ -29,7 +29,7 @@ procedure StringGrid_DrawCellBmp(grd: TStringGrid; Rect: TRect;
 
 procedure StringGrid_RedrawCol(grd: TStringGrid; acol: integer);
 
-procedure DrawCellText(StringGrid1: TStringGrid; acol, arow: integer;
+procedure StringGrid_DrawCellText(StringGrid1: TStringGrid; acol, arow: integer;
   Rect: TRect; ta: TAlignment; text: string);
 
 procedure StringGrid_CopytoClipboard(StringGrid1: TStringGrid);
@@ -67,7 +67,7 @@ begin
     Clipboard.AsText := s;
 end;
 
-procedure DrawCellText(StringGrid1: TStringGrid; acol, arow: integer;
+procedure StringGrid_DrawCellText(StringGrid1: TStringGrid; acol, arow: integer;
   Rect: TRect; ta: TAlignment; text: string);
 var
     x, Y, txt_width, txt_height: integer;

@@ -53,6 +53,50 @@ implementation
 
 uses dateutils, math, System.Types ;
 
+procedure TFormChart.FormCreate(Sender: TObject);
+var
+    ser: TFastLineSeries;
+    i: integer;
+
+begin
+
+    ser := TFastLineSeries.Create(nil);
+    ser.XValues.DateTime := true;
+    ser.Title := 'T,"C';
+    ser.VertAxis := aRightAxis;
+    Chart1.AddSeries(ser);
+    FSeriesTemp := ser;
+
+    ser := TFastLineSeries.Create(nil);
+    ser.XValues.DateTime := true;
+    ser.Title := 'P,μμ';
+    ser.VertAxis := aRightAxis;
+    Chart1.AddSeries(ser);
+    FSeriesPress := ser;
+
+    ser := TFastLineSeries.Create(nil);
+    ser.XValues.DateTime := true;
+    ser.Title := 'H,%';
+    ser.VertAxis := aRightAxis;
+    Chart1.AddSeries(ser);
+    FSeriesHum := ser;
+
+
+    for i := 1 to 50 do
+    begin
+        ser := TFastLineSeries.Create(nil);
+        ser.XValues.DateTime := true;
+        ser.Title := Format('%02d', [i]);
+        Chart1.AddSeries(ser);
+        FSeriesPlace[i - 1] := ser;
+    end;
+
+    for i := 0 to Chart1.SeriesCount-1 do
+        Chart1.Series[i].Active := false;
+
+
+end;
+
 procedure TFormChart.Chart1AfterDraw(Sender: TObject);
 var
     i, xPos, yPos, a, b: integer;
@@ -154,56 +198,7 @@ begin
     Chart1.LeftAxis.Automatic := true;
 end;
 
-procedure TFormChart.FormCreate(Sender: TObject);
-var
-    ser: TFastLineSeries;
-    i: integer;
 
-begin
-
-    ser := TFastLineSeries.Create(nil);
-    ser.XValues.DateTime := true;
-    ser.Title := 'T,"C';
-    ser.VertAxis := aRightAxis;
-    Chart1.AddSeries(ser);
-    FSeriesTemp := ser;
-
-    ser.AddXY(IncMinute(now, 0), 1);
-    ser.AddXY(IncMinute(now, 1), 2);
-    ser.AddXY(IncMinute(now, 2), 3);
-
-    ser := TFastLineSeries.Create(nil);
-    ser.XValues.DateTime := true;
-    ser.Title := 'P,μμ';
-    ser.VertAxis := aRightAxis;
-    Chart1.AddSeries(ser);
-    FSeriesPress := ser;
-
-    ser.AddXY(IncMinute(now, 3), 6);
-    ser.AddXY(IncMinute(now, 4), 7);
-    ser.AddXY(IncMinute(now, 5), 8);
-
-    ser := TFastLineSeries.Create(nil);
-    ser.XValues.DateTime := true;
-    ser.Title := 'H,%';
-    ser.VertAxis := aRightAxis;
-    Chart1.AddSeries(ser);
-    FSeriesHum := ser;
-
-    ser.AddXY(IncMinute(now, 6), 9);
-    ser.AddXY(IncMinute(now, 7), 10);
-    ser.AddXY(IncMinute(now, 8), 12);
-
-    for i := 1 to 50 do
-    begin
-        ser := TFastLineSeries.Create(nil);
-        ser.XValues.DateTime := true;
-        ser.Title := Format('%02d', [i]);
-        Chart1.AddSeries(ser);
-        FSeriesPlace[i - 1] := ser;
-    end;
-
-end;
 
 procedure TFormChart.SetActiveSeries(ser: TFastLineSeries);
 var
