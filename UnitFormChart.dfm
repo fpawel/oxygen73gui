@@ -14,67 +14,6 @@ object FormChart: TFormChart
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object Chart1: TChart
-    Left = 0
-    Top = 32
-    Width = 635
-    Height = 267
-    Legend.Alignment = laBottom
-    Legend.CheckBoxes = True
-    Legend.Font.Charset = RUSSIAN_CHARSET
-    Legend.Font.Height = -16
-    Legend.Font.Name = 'Tahoma'
-    Legend.FontSeriesColor = True
-    Legend.Title.Font.Height = -16
-    Legend.Title.Margins.Left = 0
-    Legend.Title.Margins.Top = 0
-    Legend.Title.Margins.Right = 0
-    Legend.Title.Margins.Bottom = 0
-    Legend.TopPos = 0
-    Legend.Visible = False
-    MarginBottom = 3
-    MarginTop = 3
-    MarginUnits = muPixels
-    Title.Font.Charset = RUSSIAN_CHARSET
-    Title.Font.Color = clBlack
-    Title.Font.Height = -19
-    Title.Font.Name = 'Consolas'
-    Title.Text.Strings = (
-      'TChart')
-    Title.Visible = False
-    Title.VertMargin = 0
-    OnUndoZoom = Chart1UndoZoom
-    BottomAxis.Grid.Color = clTeal
-    BottomAxis.Grid.SmallDots = True
-    LeftAxis.Grid.Color = clTeal
-    LeftAxis.Grid.SmallDots = True
-    RightAxis.Grid.SmallDots = True
-    RightAxis.Grid.Visible = False
-    TopAxis.Visible = False
-    View3D = False
-    OnAfterDraw = Chart1AfterDraw
-    Align = alClient
-    BevelOuter = bvNone
-    Color = clWindow
-    TabOrder = 0
-    DefaultCanvas = 'TGDIPlusCanvas'
-    ColorPaletteIndex = -2
-    ColorPalette = (
-      10485760
-      5349
-      3381555
-      4194304
-      16711842
-      9896191
-      8404992
-      11119360
-      2539404
-      20640
-      12087782
-      628464
-      8421631
-      8421504)
-  end
   object Panel5: TPanel
     Left = 0
     Top = 0
@@ -91,7 +30,7 @@ object FormChart: TFormChart
     Font.Style = [fsBold]
     ParentBackground = False
     ParentFont = False
-    TabOrder = 1
+    TabOrder = 0
     object ToolBar1: TToolBar
       Left = 569
       Top = 0
@@ -248,6 +187,36 @@ object FormChart: TFormChart
         end
       end
     end
+  end
+  object Chart1: TChart
+    Left = 0
+    Top = 32
+    Width = 635
+    Height = 267
+    Legend.Title.Visible = False
+    Legend.Visible = False
+    MarginRight = 0
+    MarginTop = 0
+    MarginUnits = muPixels
+    Title.Text.Strings = (
+      'TChart')
+    Title.Visible = False
+    Title.VertMargin = 0
+    OnUndoZoom = Chart1UndoZoom
+    DepthAxis.Grid.Visible = False
+    RightAxis.Grid.Visible = False
+    View3D = False
+    OnAfterDraw = Chart1AfterDraw
+    Align = alClient
+    BevelOuter = bvNone
+    Color = clWindow
+    TabOrder = 1
+    ExplicitLeft = 174
+    ExplicitTop = -196
+    ExplicitWidth = 461
+    ExplicitHeight = 495
+    DefaultCanvas = 'TGDIPlusCanvas'
+    ColorPaletteIndex = 13
   end
   object ImageList1: TImageList
     ColorDepth = cd32Bit

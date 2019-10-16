@@ -11,7 +11,6 @@ uses
 
 type
     TFormChart = class(TForm)
-        Chart1: TChart;
         ImageList1: TImageList;
         Panel5: TPanel;
         ToolBar1: TToolBar;
@@ -22,6 +21,7 @@ type
     MemoX: TMemo;
     MemoY1: TMemo;
     MemoY2: TMemo;
+    Chart1: TChart;
         procedure FormCreate(Sender: TObject);
         procedure Chart1UndoZoom(Sender: TObject);
         procedure Chart1AfterDraw(Sender: TObject);
@@ -57,6 +57,7 @@ procedure TFormChart.FormCreate(Sender: TObject);
 var
     ser: TFastLineSeries;
     i: integer;
+    axisPress, axisHum:TChartAxis;
 
 begin
 
@@ -67,18 +68,34 @@ begin
     Chart1.AddSeries(ser);
     FSeriesTemp := ser;
 
+    axisPress := TChartAxis.Create(Chart1);
+    axisPress.OtherSide := true;
+    axisPress.PositionUnits := muPixels;
+    axisPress.PositionPercent := 60;
+    axisPress.Grid.Hide;
+
     ser := TFastLineSeries.Create(nil);
     ser.XValues.DateTime := true;
     ser.Title := 'P,μμ';
     ser.VertAxis := aRightAxis;
     Chart1.AddSeries(ser);
+    ser.CustomVertAxis := axisPress;
     FSeriesPress := ser;
+
+
+    axisHum := TChartAxis.Create(Chart1);
+    axisHum.OtherSide := true;
+    axisHum.PositionUnits := muPixels;
+    axisHum.PositionPercent := 130;
+    axisHum.Grid.Hide;
+
 
     ser := TFastLineSeries.Create(nil);
     ser.XValues.DateTime := true;
     ser.Title := 'H,%';
     ser.VertAxis := aRightAxis;
     Chart1.AddSeries(ser);
+    ser.CustomVertAxis := axisHum;
     FSeriesHum := ser;
 
 

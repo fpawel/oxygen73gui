@@ -1,7 +1,7 @@
 object FormOxygen73: TFormOxygen73
   Left = 0
   Top = 0
-  Caption = 'FormOxygen73'
+  Caption = #1069#1061#1071' O2'
   ClientHeight = 587
   ClientWidth = 907
   Color = clWindow
@@ -180,7 +180,6 @@ object FormOxygen73: TFormOxygen73
         Font.Style = []
         ParentFont = False
         TabOrder = 2
-        ExplicitWidth = 758
       end
     end
   end

@@ -33,6 +33,8 @@ object FormProducts: TFormProducts
     OnDrawCell = StringGrid1DrawCell
     OnMouseDown = StringGrid1MouseDown
     OnSelectCell = StringGrid1SelectCell
+    ExplicitLeft = -2
+    ExplicitTop = -2
     ColWidths = (
       64
       64

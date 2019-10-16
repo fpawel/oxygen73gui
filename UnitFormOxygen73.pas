@@ -8,7 +8,7 @@ uses
     Vcl.Controls, Vcl.Forms, Vcl.Dialogs, MainSvcClient,
     Vcl.ComCtrls, Vcl.ToolWin, Vcl.StdCtrls, Vcl.ExtCtrls, System.ImageList,
     Vcl.ImgList, VclTee.TeeGDIPlus, VclTee.TeEngine, VclTee.TeeProcs,
-    VclTee.Chart;
+    api.notify, VclTee.Chart;
 
 type
     TFormOxygen73 = class(TForm)
@@ -39,6 +39,7 @@ type
         procedure HandleStatus(ok: Boolean; s, det: string);
         procedure HandleCopydata(var Message: TMessage); message WM_COPYDATA;
         function ExceptionDialog(e: Exception): Boolean;
+        procedure NewMeasurement(m: TMeasurement);
     public
         { Public declarations }
         procedure AppException(Sender: TObject; e: Exception);
@@ -49,9 +50,9 @@ var
 
 implementation
 
-uses apitypes, mainsvc, JclDebug, vclutils, UnitFormCatalogue, UnitFormProducts,
+uses dateutils, JclDebug, vclutils, UnitFormCatalogue, UnitFormProducts,
     UnitFormChart,
-    logfile, api.notify, Thrift.Transport, UnitFormJournal;
+    logfile, Thrift.Transport, UnitFormJournal, stringgridutils;
 
 {$R *.dfm}
 
@@ -108,9 +109,7 @@ begin
     end;
 
     api.notify.HandleWriteConsole := FormJournal.NewEntry;
-    api.notify.HandleMeasurement := procedure(m: TMeasurement)
-        begin
-        end;
+    api.notify.HandleMeasurement := NewMeasurement;
     api.notify.HandleStatus := procedure(x: TStatusMessage)
         begin
             HandleStatus(x.ok, x.Text, x.Detail);
@@ -175,6 +174,30 @@ end;
 procedure TFormOxygen73.HandleCopydata(var Message: TMessage);
 begin
     api.notify.HandleCopydata(Message);
+end;
+
+procedure TFormOxygen73.NewMeasurement(m: TMeasurement);
+var
+  I: Integer;
+
+begin
+    with FormCatalogue.StringGrid1 do
+        if Row <> RowCount-1 then
+            exit;
+    m.StoredAt := IncHour(m.StoredAt, 3);
+    for I := 0 to 49 do
+        if m.Places[i] <> 112 then
+        begin
+            FormChart.FSeriesPlace[i].AddNullXY(m.StoredAt, m.Places[i]);
+        end;
+    FormChart.FSeriesTemp.AddXY(m.StoredAt, m.Temperature);
+    FormChart.FSeriesPress.AddXY(m.StoredAt, m.Pressure);
+    FormChart.FSeriesHum.AddXY(m.StoredAt, m.Humidity);
+    StringGrid_Redraw(FormProducts.StringGrid1);
+
+
+
+
 end;
 
 end.

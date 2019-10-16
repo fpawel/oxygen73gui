@@ -6,7 +6,8 @@ uses
     Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
     System.Classes, Vcl.Graphics,
     Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Grids,
-    mainsvc, Thrift.Collections, apitypes, MainSvcClient, stringgridutils, stringutils;
+    mainsvc, Thrift.Collections, apitypes, MainSvcClient, stringgridutils,
+    stringutils;
 
 type
     TFormCatalogue = class(TForm)
@@ -35,8 +36,8 @@ implementation
 
 {$R *.dfm}
 
-uses myutils, dateutils, UnitFormOxygen73, UnitFormProducts, math, UnitFormChart;
-
+uses myutils, dateutils, UnitFormOxygen73, UnitFormProducts, math,
+    UnitFormChart;
 
 function formatPartyTime(t: int64): string;
 begin
@@ -52,8 +53,8 @@ begin
     begin
         OnSelectCell := nil;
         with FYearMonth[ComboBox1.ItemIndex] do
-            Fbuckets := MainSvcApi.listBucketsOfYearMonth(year, month);
-        RowCount := Fbuckets.Count + 1;
+            FBuckets := MainSvcApi.listBucketsOfYearMonth(year, month);
+        RowCount := FBuckets.Count + 1;
         if RowCount = 1 then
             exit;
 
@@ -69,8 +70,8 @@ begin
         ColWidths[3] := 70;
         ColWidths[4] := 120;
 
-        for I := 0 to Fbuckets.Count - 1 do
-            with Fbuckets[I] do
+        for I := 0 to FBuckets.Count - 1 do
+            with FBuckets[I] do
             begin
                 Cells[0, I + 1] :=
                   Inttostr2(DayOf(unixMillisToDateTime(CreatedAt)));
@@ -195,8 +196,7 @@ begin
             FormChart.FSeriesHum.AddXY(t, m.Humidity);
         for I := 0 to 49 do
             if not IsNaN(m.Places[I]) then
-                FormChart.FSeriesPlace[I].AddXY(t, m.Places[I]);
-
+            FormChart.FSeriesPlace[I].AddXY(t, m.Places[I]);
     end;
 
 end;

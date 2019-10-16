@@ -88,10 +88,10 @@ begin
     begin
         ColCount := 6;
         RowCount := 10;
-        ColWidths[5] := 150;
+        ColWidths[5] := 180;
         for c := 0 to 4 do
         begin
-            ColWidths[c + 0] := 170;
+            ColWidths[c + 0] := 180;
             for r := 0 to 9 do
             begin
                 p := FProducts[c * 5 + r];
@@ -208,6 +208,13 @@ var
     ser: TFastLineSeries;
 begin
     Place := ACol * 10 + ARow;
+    if not Assigned(FProducts) or( Place >= FProducts.Count) then
+    begin
+        exit;
+    end;
+
+
+
     product := FProducts[Place];
     grd := StringGrid1;
     cnv := grd.Canvas;
