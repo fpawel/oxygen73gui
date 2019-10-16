@@ -5,7 +5,8 @@ interface
 uses
     Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
     System.Classes, Vcl.Graphics, Thrift.Collections, VclTee.Series,
-    Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, apitypes, mainsvc, Vcl.ExtCtrls;
+    Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, apitypes, mainsvc,
+    Vcl.ExtCtrls;
 
 type
     TFormProducts = class(TForm)
@@ -31,6 +32,8 @@ type
     public
         { Public declarations }
         procedure SetPartyID(APartyID: int64);
+        procedure RedrawPlace(APlace: Integer);
+        procedure RedrawAmbient;
 
     end;
 
@@ -58,6 +61,30 @@ begin
     FPartyID := APartyID;
     FProducts := MainSvcApi.listProducts(APartyID);
     SetupStringGrid;
+end;
+
+
+procedure TFormProducts.RedrawAmbient;
+begin
+    with StringGrid1 do
+        begin
+            Cells[5,0] := Cells[5,0];
+            Cells[5,1] := Cells[5,1];
+            Cells[5,2] := Cells[5,2];
+        end;
+
+end;
+
+procedure TFormProducts.RedrawPlace(APlace: Integer);
+var
+    c, r: Integer;
+begin
+    with StringGrid1 do
+        for c := 0 to 4 do
+            for r := 0 to 9 do
+                if c * 5 + r = APlace then
+                    Cells[c, r] := Cells[c, r];
+
 end;
 
 function TFormProducts.CellSeries(ACol, ARow: Integer): TFastLineSeries;
@@ -179,7 +206,8 @@ begin
     r := Rect;
 
     r.Left := r.Left + 20;
-    StringGrid_DrawCellText(StringGrid1, ACol, ARow, r, taLeftJustify, ser.Title);
+    StringGrid_DrawCellText(StringGrid1, ACol, ARow, r, taLeftJustify,
+      ser.Title);
 
     r.Left := r.Left + 40;
     d := round(r.Top + r.Height / 2);
@@ -208,12 +236,10 @@ var
     ser: TFastLineSeries;
 begin
     Place := ACol * 10 + ARow;
-    if not Assigned(FProducts) or( Place >= FProducts.Count) then
+    if not Assigned(FProducts) or (Place >= FProducts.Count) then
     begin
         exit;
     end;
-
-
 
     product := FProducts[Place];
     grd := StringGrid1;

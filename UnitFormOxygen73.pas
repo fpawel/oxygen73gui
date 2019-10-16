@@ -25,7 +25,7 @@ type
         Panel5: TPanel;
         Panel6: TPanel;
         Splitter1: TSplitter;
-    ToolButton2: TToolButton;
+        ToolButton2: TToolButton;
         procedure FormShow(Sender: TObject);
         procedure Splitter1Moved(Sender: TObject);
         procedure Splitter2Moved(Sender: TObject);
@@ -33,7 +33,7 @@ type
           WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
         procedure FormClose(Sender: TObject; var Action: TCloseAction);
         procedure FormCreate(Sender: TObject);
-    procedure ToolButton1Click(Sender: TObject);
+        procedure ToolButton1Click(Sender: TObject);
     private
         { Private declarations }
         procedure HandleStatus(ok: Boolean; s, det: string);
@@ -121,7 +121,7 @@ end;
 procedure TFormOxygen73.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     api.notify.Finalize;
-    //SendMessage(FindWindow('Oxygen73WindowClass', ''), WM_CLOSE, 0,0);
+    // SendMessage(FindWindow('Oxygen73WindowClass', ''), WM_CLOSE, 0,0);
 end;
 
 procedure TFormOxygen73.FormMouseWheel(Sender: TObject; Shift: TShiftState;
@@ -142,7 +142,7 @@ end;
 
 procedure TFormOxygen73.ToolButton1Click(Sender: TObject);
 begin
-    Formjournal.Show;
+    FormJournal.Show;
 end;
 
 function TFormOxygen73.ExceptionDialog(e: Exception): Boolean;
@@ -178,22 +178,25 @@ end;
 
 procedure TFormOxygen73.NewMeasurement(m: TMeasurement);
 var
-  I: Integer;
+    I: Integer;
 
 begin
-    with FormCatalogue.StringGrid1 do
-        if Row <> RowCount-1 then
-            exit;
+    with FormCatalogue do
+        with StringGrid1 do
+            if (ComboBox1.ItemIndex <> 0) or (Row <> RowCount - 1) then
+                exit;
     m.StoredAt := IncHour(m.StoredAt, 3);
     for I := 0 to 49 do
-        if m.Places[i] <> 112 then
+        if m.Places[I] <> 112 then
         begin
-            FormChart.FSeriesPlace[i].AddNullXY(m.StoredAt, m.Places[i]);
+            FormChart.FSeriesPlace[I].AddNullXY(m.StoredAt, m.Places[I]);
+            FormProducts.RedrawPlace(i);
         end;
     FormChart.FSeriesTemp.AddXY(m.StoredAt, m.Temperature);
     FormChart.FSeriesPress.AddXY(m.StoredAt, m.Pressure);
     FormChart.FSeriesHum.AddXY(m.StoredAt, m.Humidity);
-    StringGrid_Redraw(FormProducts.StringGrid1);
+    FormProducts.RedrawAmbient;
+
 end;
 
 end.
