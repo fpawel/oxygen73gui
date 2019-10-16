@@ -194,10 +194,6 @@ begin
     FormChart.FSeriesPress.AddXY(m.StoredAt, m.Pressure);
     FormChart.FSeriesHum.AddXY(m.StoredAt, m.Humidity);
     StringGrid_Redraw(FormProducts.StringGrid1);
-
-
-
-
 end;
 
 end.
