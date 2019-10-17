@@ -195,7 +195,7 @@ object FormChart: TFormChart
     Height = 267
     Legend.Title.Visible = False
     Legend.Visible = False
-    MarginRight = 0
+    MarginRight = 10
     MarginTop = 0
     MarginUnits = muPixels
     Title.Text.Strings = (
@@ -205,18 +205,33 @@ object FormChart: TFormChart
     OnUndoZoom = Chart1UndoZoom
     DepthAxis.Grid.Visible = False
     RightAxis.Grid.Visible = False
+    RightAxis.Title.Caption = 'T"C'
+    RightAxis.Title.Position = tpEnd
+    RightAxis.TitleSize = 11
     View3D = False
     OnAfterDraw = Chart1AfterDraw
     Align = alClient
     BevelOuter = bvNone
     Color = clWindow
     TabOrder = 1
-    ExplicitLeft = 174
-    ExplicitTop = -196
-    ExplicitWidth = 461
-    ExplicitHeight = 495
     DefaultCanvas = 'TGDIPlusCanvas'
-    ColorPaletteIndex = 13
+    ColorPaletteIndex = -2
+    ColorPalette = (
+      255
+      16711680
+      11048782
+      7028779
+      6519581
+      919731
+      10708548
+      1330417
+      10401629
+      7368816
+      8388863
+      3513587
+      0
+      16711808
+      32768)
   end
   object ImageList1: TImageList
     ColorDepth = cd32Bit

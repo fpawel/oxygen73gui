@@ -2,7 +2,6 @@ program oxygen73gui;
 
 uses
   Vcl.Forms,
-  UnitFormOxygen73 in 'UnitFormOxygen73.pas' {FormOxygen73},
   mainsvc in 'gen-delphi\mainsvc.pas',
   Thrift.Collections in 'thrift\Thrift.Collections.pas',
   Thrift.Exception in 'thrift\Thrift.Exception.pas',
@@ -32,7 +31,6 @@ uses
   UnitFormChart in 'UnitFormChart.pas' {FormChart},
   apitypes in 'gen-delphi\apitypes.pas',
   logfile in 'logfile.pas',
-  api.notify in 'api\api.notify.pas',
   Grijjy.Bson in 'grijjy\Grijjy.Bson.pas',
   Grijjy.Bson.Serialization in 'grijjy\Grijjy.Bson.Serialization.pas',
   Grijjy.SysUtils in 'grijjy\Grijjy.SysUtils.pas',
@@ -43,7 +41,9 @@ uses
   UnitFormJournal in 'UnitFormJournal.pas' {FormJournal},
   UnitFormConsole in 'UnitFormConsole.pas' {FormConsole},
   UnitFormPopup in 'UnitFormPopup.pas' {FormPopup},
-  myutils in 'utils\myutils.pas';
+  myutils in 'utils\myutils.pas',
+  UnitFormOxygen73 in 'UnitFormOxygen73.pas' {FormOxygen73},
+  UnitMeasurement in 'UnitMeasurement.pas';
 
 {$R *.res}
 

@@ -7,7 +7,7 @@ uses
     System.Classes, Vcl.Graphics,
     Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Grids,
     mainsvc, Thrift.Collections, apitypes, MainSvcClient, stringgridutils,
-    stringutils;
+    stringutils, UnitMeasurement;
 
 type
     TFormCatalogue = class(TForm)
@@ -19,14 +19,20 @@ type
           var CanSelect: Boolean);
         procedure StringGrid1DrawCell(Sender: TObject; ACol, ARow: Integer;
           Rect: TRect; State: TGridDrawState);
+        procedure FormCreate(Sender: TObject);
     private
         { Private declarations }
         FYearMonth: IThriftList<IYearMonth>;
+        FSelectedBucket: IBucket;
         FBuckets: IThriftList<IBucket>;
-
+        function getLastBucket: IBucket;
     public
         { Public declarations }
+        property SelectedBucket: IBucket read FSelectedBucket;
+        property LastBucket: IBucket read getLastBucket;
         procedure FetchYearsMonths;
+        procedure HandleNewMeasurements(ms: TArray<TMeasurement>);
+        procedure HandleMeasurements(ms: TArray<TMeasurement>);
     end;
 
 var
@@ -42,6 +48,66 @@ uses myutils, dateutils, UnitFormOxygen73, UnitFormProducts, math,
 function formatPartyTime(t: int64): string;
 begin
     result := FormatDateTime('dd.mm.yy hh:nn', unixMillisToDateTime(t))
+end;
+
+procedure TFormCatalogue.FormCreate(Sender: TObject);
+begin
+    FSelectedBucket := nil;
+end;
+
+procedure TFormCatalogue.HandleNewMeasurements(ms: TArray<TMeasurement>);
+var
+    I: Integer;
+    value: double;
+    m: TMeasurement;
+begin
+    with StringGrid1 do
+        if (ComboBox1.ItemIndex <> 0) or (Row <> RowCount - 1) then
+            exit;
+
+    FBuckets[FBuckets.Count - 1].UpdatedAt :=
+      DateTimeToUnixMillis(IncHour(now, 3));
+    with FormCatalogue.StringGrid1 do
+        Cells[2, RowCount - 1] := TimeToStr(now);
+    for m in ms do
+        FormChart.AddMeasurement(m);
+    for I := 0 to 49 do
+        FormProducts.RedrawPlace(I);
+    FormProducts.RedrawAmbient;
+end;
+
+procedure TFormCatalogue.HandleMeasurements(ms: TArray<TMeasurement>);
+var
+    I: Integer;
+    value: double;
+    m: TMeasurement;
+    buk: IBucket;
+    CreatedAt, UpdatedAt: TDateTime;
+begin
+    buk := self.SelectedBucket;
+    if not Assigned(buk) then
+        exit;
+    FormChart.FSeriesTemp.Clear;
+    FormChart.FSeriesPress.Clear;
+    FormChart.FSeriesHum.Clear;
+    for I := 0 to 49 do
+        FormChart.FSeriesPlace[I].Clear;
+    CreatedAt := IncHour(unixMillisToDateTime(buk.CreatedAt), -3);
+    UpdatedAt := IncHour(unixMillisToDateTime(buk.UpdatedAt), -3);
+    for m in ms do
+        if (m.StoredAt >= CreatedAt) and (m.StoredAt <= UpdatedAt) then
+            FormChart.AddMeasurement(m);
+    for I := 0 to 49 do
+        FormProducts.RedrawPlace(I);
+    FormProducts.RedrawAmbient;
+end;
+
+function TFormCatalogue.getLastBucket: IBucket;
+begin
+    if not Assigned(FormCatalogue.FBuckets) or (FormCatalogue.FBuckets.Count = 0)
+    then
+        exit(nil);
+    result := FormCatalogue.FBuckets[FormCatalogue.FBuckets.Count - 1];
 end;
 
 procedure TFormCatalogue.ComboBox1Change(Sender: TObject);
@@ -75,8 +141,10 @@ begin
             begin
                 Cells[0, I + 1] :=
                   Inttostr2(DayOf(unixMillisToDateTime(CreatedAt)));
-                Cells[1, I + 1] := TimeToStr(unixMillisToDateTime(CreatedAt));
-                Cells[2, I + 1] := TimeToStr(unixMillisToDateTime(UpdatedAt));
+                Cells[1, I + 1] :=
+                  TimeToStr(IncHour(unixMillisToDateTime(CreatedAt), -3));
+                Cells[2, I + 1] :=
+                  TimeToStr(IncHour(unixMillisToDateTime(UpdatedAt), -3));
 
                 Cells[3, I + 1] := Inttostr(PartyID);
 
@@ -165,39 +233,23 @@ procedure TFormCatalogue.StringGrid1SelectCell(Sender: TObject;
   ACol, ARow: Integer; var CanSelect: Boolean);
 var
     party: IParty;
-    buk: IBucket;
-    m: IMeasurement;
     t: TDateTime;
     I: Integer;
 begin
     if ARow - 1 >= FBuckets.Count then
+    begin
+        FSelectedBucket := nil;
         exit;
-    buk := FBuckets[ARow - 1];
-    party := MainSvcApi.getParty(buk.PartyID);
+    end;
+    FSelectedBucket := FBuckets[ARow - 1];
+    party := MainSvcApi.getParty(FSelectedBucket.PartyID);
     with StringGrid1 do
         FormOxygen73.Caption := Format('Загрузка №%d от %s: %s - %s...%s',
           [party.PartyID, formatPartyTime(party.CreatedAt), Cells[0, ARow],
           Cells[1, ARow], Cells[2, ARow]]);
     FormProducts.SetPartyID(party.PartyID);
-
-    FormChart.FSeriesTemp.Clear;
-    FormChart.FSeriesPress.Clear;
-    FormChart.FSeriesHum.Clear;
-    for I := 0 to 49 do
-        FormChart.FSeriesPlace[I].Clear;
-    for m in MainSvcApi.listMeasurements(buk.CreatedAt, buk.UpdatedAt) do
-    begin
-        t := unixMillisToDateTime(m.StoredAt);
-        if not IsNaN(m.Temperature) then
-            FormChart.FSeriesTemp.AddXY(t, m.Temperature);
-        if not IsNaN(m.Pressure) then
-            FormChart.FSeriesPress.AddXY(t, m.Pressure);
-        if not IsNaN(m.Humidity) then
-            FormChart.FSeriesHum.AddXY(t, m.Humidity);
-        for I := 0 to 49 do
-            if not IsNaN(m.Places[I]) then
-            FormChart.FSeriesPlace[I].AddXY(t, m.Places[I]);
-    end;
+    MainSvcApi.requestMeasurements(FSelectedBucket.CreatedAt,
+      FSelectedBucket.UpdatedAt);
 
 end;
 

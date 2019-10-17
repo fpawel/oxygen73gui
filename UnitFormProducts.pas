@@ -6,11 +6,14 @@ uses
     Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
     System.Classes, Vcl.Graphics, Thrift.Collections, VclTee.Series,
     Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, apitypes, mainsvc,
-    Vcl.ExtCtrls;
+    Vcl.ExtCtrls, Vcl.Menus;
 
 type
     TFormProducts = class(TForm)
         StringGrid1: TStringGrid;
+        PopupMenu1: TPopupMenu;
+        N1: TMenuItem;
+        N2: TMenuItem;
         procedure FormCreate(Sender: TObject);
         procedure StringGrid1DrawCell(Sender: TObject; ACol, ARow: Integer;
           Rect: TRect; State: TGridDrawState);
@@ -18,6 +21,7 @@ type
           var CanSelect: Boolean);
         procedure StringGrid1MouseDown(Sender: TObject; Button: TMouseButton;
           Shift: TShiftState; X, Y: Integer);
+        procedure N2Click(Sender: TObject);
     private
         { Private declarations }
         FProducts: IThriftList<IProduct>;
@@ -56,6 +60,40 @@ begin
     //
 end;
 
+procedure TFormProducts.N2Click(Sender: TObject);
+var
+    c, r, place: Integer;
+    b: Boolean;
+begin
+    b := (Sender as TComponent).Tag = 1;
+    with StringGrid1, StringGrid1.Selection do
+    begin
+        for c := Left to Right do
+            for r := Top to Bottom do
+            begin
+                if c < 5 then
+                begin
+                    place := c * 10 + r;
+                    if (place > -1) and (place < 50) then
+                        FormChart.FSeriesPlace[place].Active := b;
+                end
+                else
+                begin
+                    case r of
+                        0:
+                            FormChart.FSeriesTemp.Active := b;
+                        1:
+                            FormChart.FSeriesPress.Active := b;
+                        2:
+                            FormChart.FSeriesHum.Active := b;
+                    end;
+                end;
+                Cells[c,r] := Cells[c,r];
+            end;
+
+    end;
+end;
+
 procedure TFormProducts.SetPartyID(APartyID: int64);
 begin
     FPartyID := APartyID;
@@ -63,15 +101,14 @@ begin
     SetupStringGrid;
 end;
 
-
 procedure TFormProducts.RedrawAmbient;
 begin
     with StringGrid1 do
-        begin
-            Cells[5,0] := Cells[5,0];
-            Cells[5,1] := Cells[5,1];
-            Cells[5,2] := Cells[5,2];
-        end;
+    begin
+        Cells[5, 0] := Cells[5, 0];
+        Cells[5, 1] := Cells[5, 1];
+        Cells[5, 2] := Cells[5, 2];
+    end;
 
 end;
 
@@ -125,7 +162,7 @@ begin
                 if p.Serial <> 0 then
                 begin
                     Cells[c, r] := inttostr(p.Serial);
-                    if p.Place <> c * 5 + r then
+                    if p.place <> c * 5 + r then
                         raise Exception.Create('unexpected');
 
                 end;
@@ -159,6 +196,7 @@ procedure TFormProducts.StringGrid1MouseDown(Sender: TObject;
 var
     ACol, ARow: Integer;
     ser: TFastLineSeries;
+    count_right_axis:integer;
 begin
     if (GetAsyncKeyState(VK_LBUTTON) >= 0) then
         exit;
@@ -168,6 +206,9 @@ begin
     ser := CellSeries(ACol, ARow);
     ser.Active := not ser.Active;
     StringGrid1.Cells[ACol, ARow] := StringGrid1.Cells[ACol, ARow];
+
+    FormChart.UpdateRightAxis;
+
 
 end;
 
@@ -230,21 +271,21 @@ var
     grd: TStringGrid;
     cnv: TCanvas;
     r: TRect;
-    Place, d: Integer;
+    place, d: Integer;
     product: IProduct;
     brushColor: TColor;
     ser: TFastLineSeries;
 begin
-    Place := ACol * 10 + ARow;
-    if not Assigned(FProducts) or (Place >= FProducts.Count) then
+    place := ACol * 10 + ARow;
+    if not Assigned(FProducts) or (place >= FProducts.Count) then
     begin
         exit;
     end;
 
-    product := FProducts[Place];
+    product := FProducts[place];
     grd := StringGrid1;
     cnv := grd.Canvas;
-    ser := FormChart.FSeriesPlace[Place];
+    ser := FormChart.FSeriesPlace[place];
 
     StringGrid_DrawCheckbox2(grd, cnv, Rect, ser.Active);
 

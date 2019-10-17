@@ -29,12 +29,11 @@ object FormProducts: TFormProducts
     RowCount = 1
     FixedRows = 0
     GradientEndColor = clBlack
+    PopupMenu = PopupMenu1
     TabOrder = 0
     OnDrawCell = StringGrid1DrawCell
     OnMouseDown = StringGrid1MouseDown
     OnSelectCell = StringGrid1SelectCell
-    ExplicitLeft = -2
-    ExplicitTop = -2
     ColWidths = (
       64
       64
@@ -43,5 +42,18 @@ object FormProducts: TFormProducts
       64)
     RowHeights = (
       22)
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 552
+    Top = 128
+    object N1: TMenuItem
+      Tag = 1
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1075#1088#1072#1092#1080#1082#1080
+      OnClick = N2Click
+    end
+    object N2: TMenuItem
+      Caption = #1057#1082#1088#1099#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1075#1088#1072#1092#1080#1082#1080
+      OnClick = N2Click
+    end
   end
 end

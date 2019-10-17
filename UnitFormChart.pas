@@ -7,7 +7,7 @@ uses
     System.Classes, Vcl.Graphics,
     Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VclTee.TeeGDIPlus, VclTee.TeEngine,
     Vcl.ExtCtrls, VclTee.TeeProcs, VclTee.Chart, VclTee.Series, Vcl.StdCtrls,
-    Vcl.ComCtrls, Vcl.ToolWin, System.ImageList, Vcl.ImgList;
+    Vcl.ComCtrls, Vcl.ToolWin, System.ImageList, Vcl.ImgList, UnitMeasurement;
 
 type
     TFormChart = class(TForm)
@@ -18,19 +18,20 @@ type
         ToolButton3: TToolButton;
         Panel11: TPanel;
         GridPanel1: TGridPanel;
-    MemoX: TMemo;
-    MemoY1: TMemo;
-    MemoY2: TMemo;
-    Chart1: TChart;
+        MemoX: TMemo;
+        MemoY1: TMemo;
+        MemoY2: TMemo;
+        Chart1: TChart;
         procedure FormCreate(Sender: TObject);
         procedure Chart1UndoZoom(Sender: TObject);
         procedure Chart1AfterDraw(Sender: TObject);
-    procedure ToolButton1Click(Sender: TObject);
-    procedure ToolButton3Click(Sender: TObject);
-    procedure MemoXMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
+        procedure ToolButton1Click(Sender: TObject);
+        procedure ToolButton3Click(Sender: TObject);
+        procedure MemoXMouseMove(Sender: TObject; Shift: TShiftState;
+          X, Y: Integer);
     private
         { Private declarations }
+        FAxisTemp, FAxisPress, FAxisHum: TChartAxis;
         procedure SetActiveSeries(ser: TFastLineSeries);
         function GetActiveSeries: TFastLineSeries;
         procedure ShowCurrentScaleValues;
@@ -39,9 +40,15 @@ type
         { Public declarations }
         FSeriesTemp, FSeriesPress, FSeriesHum: TFastLineSeries;
         FSeriesPlace: array [0 .. 49] of TFastLineSeries;
-        procedure ChangeAxisOrder(c: TWinControl; WheelDelta: integer);
+        procedure ChangeAxisOrder(c: TWinControl; WheelDelta: Integer);
+
+        procedure AddMeasurement(m: TMeasurement);
+
+        procedure UpdateRightAxis;
+
         property ActiveSeries: TFastLineSeries read GetActiveSeries
           write SetActiveSeries;
+
     end;
 
 var
@@ -51,13 +58,12 @@ implementation
 
 {$R *.dfm}
 
-uses dateutils, math, System.Types ;
+uses dateutils, math, System.Types;
 
 procedure TFormChart.FormCreate(Sender: TObject);
 var
     ser: TFastLineSeries;
-    i: integer;
-    axisPress, axisHum:TChartAxis;
+    i: Integer;
 
 begin
 
@@ -68,36 +74,55 @@ begin
     Chart1.AddSeries(ser);
     FSeriesTemp := ser;
 
-    axisPress := TChartAxis.Create(Chart1);
-    axisPress.OtherSide := true;
-    axisPress.PositionUnits := muPixels;
-    axisPress.PositionPercent := 60;
-    axisPress.Grid.Hide;
+    FAxisTemp := Chart1.RightAxis;
+    FAxisTemp.PositionUnits := muPixels;
+    FAxisTemp.Grid.Hide;
+    FAxisTemp.Title.Text := 'T\"C';
+    FAxisTemp.Title.Show;
+    FAxisTemp.Title.Position := TAxisTitlePosition.tpEnd;
+    FAxisTemp.Title.Font.Size := 11;
+    FAxisTemp.Title.Font.Color := clRed;
+    FAxisTemp.LabelsFont.Color := clRed;
+
+    FAxisPress := TChartAxis.Create(Chart1);
+    FAxisPress.OtherSide := true;
+    FAxisPress.PositionUnits := muPixels;
+    FAxisPress.PositionPercent := -80;
+    FAxisPress.Grid.Hide;
+    FAxisPress.Title.Text := 'P,לל.נע.סע.';
+    FAxisPress.Title.Show;
+    FAxisPress.Title.Position := TAxisTitlePosition.tpEnd;
+    FAxisPress.Title.Font.Size := 11;
+    FAxisPress.Title.Font.Color := clBlue;
+    FAxisPress.LabelsFont.Color := clBlue;
+
+    FAxisHum := TChartAxis.Create(Chart1);
+    FAxisHum.OtherSide := true;
+    FAxisHum.PositionUnits := muPixels;
+    FAxisHum.PositionPercent := -160;
+    FAxisHum.Grid.Hide;
+    FAxisHum.Title.Text := 'H,%';
+    FAxisHum.Title.Show;
+    FAxisHum.Title.Position := TAxisTitlePosition.tpEnd;
+    FAxisHum.Title.Font.Size := 11;
+    FAxisHum.Title.Font.Color := $00A8974E;
+    FAxisHum.LabelsFont.Color := $00A8974E;
 
     ser := TFastLineSeries.Create(nil);
     ser.XValues.DateTime := true;
-    ser.Title := 'P,לל';
+    ser.Title := 'P,לל.נע.סע.';
     ser.VertAxis := aRightAxis;
     Chart1.AddSeries(ser);
-    ser.CustomVertAxis := axisPress;
+    ser.CustomVertAxis := FAxisPress;
     FSeriesPress := ser;
-
-
-    axisHum := TChartAxis.Create(Chart1);
-    axisHum.OtherSide := true;
-    axisHum.PositionUnits := muPixels;
-    axisHum.PositionPercent := 130;
-    axisHum.Grid.Hide;
-
 
     ser := TFastLineSeries.Create(nil);
     ser.XValues.DateTime := true;
     ser.Title := 'H,%';
     ser.VertAxis := aRightAxis;
     Chart1.AddSeries(ser);
-    ser.CustomVertAxis := axisHum;
+    ser.CustomVertAxis := FAxisHum;
     FSeriesHum := ser;
-
 
     for i := 1 to 50 do
     begin
@@ -108,15 +133,28 @@ begin
         FSeriesPlace[i - 1] := ser;
     end;
 
-    for i := 0 to Chart1.SeriesCount-1 do
+    for i := 0 to Chart1.SeriesCount - 1 do
         Chart1.Series[i].Active := false;
+end;
 
-
+procedure TFormChart.AddMeasurement(m: TMeasurement);
+var
+    i: Integer;
+begin
+    if not IsNaN(m.Temperature) then
+        FSeriesTemp.AddXY(m.StoredAt, m.Temperature);
+    if not IsNaN(m.Pressure) then
+        FSeriesPress.AddXY(m.StoredAt, m.Pressure);
+    if not IsNaN(m.Humidity) then
+        FSeriesHum.AddXY(m.StoredAt, m.Humidity);
+    for i := 0 to 49 do
+        if (m.Places[i] <> 112) and (not IsNaN(m.Places[i])) then
+            FSeriesPlace[i].AddNullXY(m.StoredAt, m.Places[i]);
 end;
 
 procedure TFormChart.Chart1AfterDraw(Sender: TObject);
 var
-    i, xPos, yPos, a, b: integer;
+    i, xPos, yPos, a, b: Integer;
     ser: TChartSeries;
 
     marker_place: boolean;
@@ -215,8 +253,6 @@ begin
     Chart1.LeftAxis.Automatic := true;
 end;
 
-
-
 procedure TFormChart.SetActiveSeries(ser: TFastLineSeries);
 var
     s: TChartSeries;
@@ -247,8 +283,8 @@ begin
     exit(nil);
 end;
 
-procedure TFormChart.MemoXMouseMove(Sender: TObject; Shift: TShiftState; X,
-  Y: Integer);
+procedure TFormChart.MemoXMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
 begin
     TMemo(Sender).SetFocus;
 end;
@@ -313,7 +349,7 @@ begin
     Chart1.Repaint;
 end;
 
-procedure TFormChart.ChangeAxisOrder(c: TWinControl; WheelDelta: integer);
+procedure TFormChart.ChangeAxisOrder(c: TWinControl; WheelDelta: Integer);
 var
     a: TChartAxis;
     step: double;
@@ -338,6 +374,63 @@ begin
 
     a.SetMinMax(a.Minimum - step, a.Maximum + step);
 
+end;
+
+procedure TFormChart.UpdateRightAxis;
+begin
+    FAxisTemp.Visible := FSeriesTemp.Visible;
+    FAxisPress.Visible := FSeriesPress.Visible;
+    FAxisHum.Visible := FSeriesHum.Visible;
+
+    if not FSeriesPress.Visible and not FSeriesHum.Visible then
+    begin
+        Chart1.MarginRight := 30;
+        exit;
+    end;
+
+    if not FSeriesTemp.Visible and FSeriesPress.Visible and not FSeriesHum.Visible  then
+    begin
+        Chart1.MarginRight := 30;
+        FAxisPress.PositionPercent := 0;
+        exit;
+    end;
+
+    if not FSeriesTemp.Visible and not FSeriesPress.Visible and FSeriesHum.Visible  then
+    begin
+        Chart1.MarginRight := 30;
+        FAxisHum.PositionPercent := 0;
+        exit;
+    end;
+
+    if FSeriesTemp.Visible and FSeriesPress.Visible and not FSeriesHum.Visible  then
+    begin
+        Chart1.MarginRight := 100;
+        FAxisPress.PositionPercent := -80;
+        exit;
+    end;
+
+    if FSeriesTemp.Visible and not FSeriesPress.Visible and FSeriesHum.Visible  then
+    begin
+        Chart1.MarginRight := 100;
+        FAxisHum.PositionPercent := -80;
+        exit;
+    end;
+
+    if not FSeriesTemp.Visible and FSeriesPress.Visible and FSeriesHum.Visible  then
+    begin
+        Chart1.MarginRight := 100;
+        FAxisPress.PositionPercent := 0;
+        FAxisHum.PositionPercent := -80;
+        exit;
+    end;
+
+    if FSeriesTemp.Visible and FSeriesPress.Visible and FSeriesHum.Visible  then
+    begin
+        Chart1.MarginRight := 200;
+        FAxisPress.PositionPercent := -80;
+        FAxisHum.PositionPercent := -160;
+        exit;
+    end;
 end;
 
 end.
