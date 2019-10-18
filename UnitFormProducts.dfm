@@ -2,7 +2,7 @@ object FormProducts: TFormProducts
   Left = 0
   Top = 0
   Caption = 'FormProducts'
-  ClientHeight = 253
+  ClientHeight = 226
   ClientWidth = 1112
   Color = clWindow
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object FormProducts: TFormProducts
     Left = 3
     Top = 3
     Width = 1106
-    Height = 247
+    Height = 220
     Align = alClient
     BorderStyle = bsNone
     DefaultRowHeight = 22
@@ -34,6 +34,7 @@ object FormProducts: TFormProducts
     OnDrawCell = StringGrid1DrawCell
     OnMouseDown = StringGrid1MouseDown
     OnSelectCell = StringGrid1SelectCell
+    ExplicitHeight = 247
     ColWidths = (
       64
       64

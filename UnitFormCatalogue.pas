@@ -43,7 +43,7 @@ implementation
 {$R *.dfm}
 
 uses myutils, dateutils, UnitFormOxygen73, UnitFormProducts, math,
-    UnitFormChart;
+    UnitFormChart, UnitFormEditSerialsDialog;
 
 function formatPartyTime(t: int64): string;
 begin
@@ -235,6 +235,7 @@ var
     party: IParty;
     t: TDateTime;
     I: Integer;
+    products : IThriftList<IProduct>;
 begin
     if ARow - 1 >= FBuckets.Count then
     begin
@@ -247,7 +248,8 @@ begin
         FormOxygen73.Caption := Format('Загрузка №%d от %s: %s - %s...%s',
           [party.PartyID, formatPartyTime(party.CreatedAt), Cells[0, ARow],
           Cells[1, ARow], Cells[2, ARow]]);
-    FormProducts.SetPartyID(party.PartyID);
+    products := MainSvcApi.listProducts(party.PartyID);
+    FormProducts.SetParty(party.PartyID, products);
     MainSvcApi.requestMeasurements(FSelectedBucket.CreatedAt,
       FSelectedBucket.UpdatedAt);
 

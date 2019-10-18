@@ -43,7 +43,8 @@ uses
   UnitFormPopup in 'UnitFormPopup.pas' {FormPopup},
   myutils in 'utils\myutils.pas',
   UnitFormOxygen73 in 'UnitFormOxygen73.pas' {FormOxygen73},
-  UnitMeasurement in 'UnitMeasurement.pas';
+  UnitMeasurement in 'UnitMeasurement.pas',
+  UnitFormEditSerialsDialog in 'UnitFormEditSerialsDialog.pas' {FormEditSerialsDialog};
 
 {$R *.res}
 
@@ -58,6 +59,7 @@ begin
   Application.CreateForm(TFormJournal, FormJournal);
   Application.CreateForm(TFormConsole, FormConsole);
   Application.CreateForm(TFormPopup, FormPopup);
+  Application.CreateForm(TFormEditSerialsDialog, FormEditSerialsDialog);
   Application.Run;
 
 end.

@@ -35,7 +35,7 @@ type
 
     public
         { Public declarations }
-        procedure SetPartyID(APartyID: int64);
+        procedure SetParty(APartyID: int64; AProducts:IThriftList<IProduct>);
         procedure RedrawPlace(APlace: Integer);
         procedure RedrawAmbient;
 
@@ -94,10 +94,10 @@ begin
     end;
 end;
 
-procedure TFormProducts.SetPartyID(APartyID: int64);
+procedure TFormProducts.SetParty(APartyID: int64; AProducts:IThriftList<IProduct>);
 begin
     FPartyID := APartyID;
-    FProducts := MainSvcApi.listProducts(APartyID);
+    FProducts := AProducts; //MainSvcApi.listProducts(APartyID);
     SetupStringGrid;
 end;
 

@@ -390,14 +390,14 @@ begin
 
     if not FSeriesTemp.Visible and FSeriesPress.Visible and not FSeriesHum.Visible  then
     begin
-        Chart1.MarginRight := 30;
+        Chart1.MarginRight := 50;
         FAxisPress.PositionPercent := 0;
         exit;
     end;
 
     if not FSeriesTemp.Visible and not FSeriesPress.Visible and FSeriesHum.Visible  then
     begin
-        Chart1.MarginRight := 30;
+        Chart1.MarginRight := 50;
         FAxisHum.PositionPercent := 0;
         exit;
     end;
@@ -426,7 +426,7 @@ begin
 
     if FSeriesTemp.Visible and FSeriesPress.Visible and FSeriesHum.Visible  then
     begin
-        Chart1.MarginRight := 200;
+        Chart1.MarginRight := 170;
         FAxisPress.PositionPercent := -80;
         FAxisHum.PositionPercent := -160;
         exit;

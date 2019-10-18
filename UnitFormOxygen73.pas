@@ -38,6 +38,9 @@ type
         N3: TMenuItem;
         N4: TMenuItem;
         N5: TMenuItem;
+        N6: TMenuItem;
+        N7: TMenuItem;
+        N8: TMenuItem;
         procedure FormShow(Sender: TObject);
         procedure Splitter1Moved(Sender: TObject);
         procedure Splitter2Moved(Sender: TObject);
@@ -45,12 +48,13 @@ type
           WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
         procedure FormClose(Sender: TObject; var Action: TCloseAction);
         procedure ToolButton1Click(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
+        procedure FormCreate(Sender: TObject);
+        procedure N6Click(Sender: TObject);
+        procedure N8Click(Sender: TObject);
     private
         { Private declarations }
         FEnableCopyData: Boolean;
         procedure HandleStatus(m: TStatusMessage);
-
 
         procedure HandleCopydata(var Message: TMessage); message WM_COPYDATA;
         function ExceptionDialog(e: Exception): Boolean;
@@ -68,7 +72,7 @@ uses Grijjy.Bson, Grijjy.Bson.Serialization, dateutils, JclDebug, vclutils,
     UnitFormCatalogue, UnitFormProducts,
     UnitFormChart, unitmeasurement,
     math, logfile, Thrift.Transport, UnitFormJournal, stringgridutils, myutils,
-    apitypes;
+    apitypes, UnitFormEditSerialsDialog;
 
 {$R *.dfm}
 
@@ -154,8 +158,6 @@ begin
     // SendMessage(FindWindow('Oxygen73WindowClass', ''), WM_CLOSE, 0,0);
 end;
 
-
-
 procedure TFormOxygen73.HandleCopydata(var Message: TMessage);
 var
     cd: PCOPYDATASTRUCT;
@@ -170,9 +172,11 @@ begin
         cdcStatus:
             HandleStatus(TJsonCD.unmarshal<TStatusMessage>(Message));
         cdcNewMeasurements:
-            FormCatalogue.HandleNewMeasurements(TMeasurement.DeserializeMeasurements(cd.lpData));
+            FormCatalogue.HandleNewMeasurements
+              (TMeasurement.DeserializeMeasurements(cd.lpData));
         cdcMeasurements:
-            FormCatalogue.HandleMeasurements(TMeasurement.DeserializeMeasurements(cd.lpData));
+            FormCatalogue.HandleMeasurements
+              (TMeasurement.DeserializeMeasurements(cd.lpData));
     else
         raise Exception.Create('wrong message: ' + IntToStr(Message.WParam));
     end;
@@ -224,5 +228,20 @@ begin
     Panel6.ShowHint := true;
 end;
 
+procedure TFormOxygen73.N6Click(Sender: TObject);
+begin
+    FormEditSerialsDialog.Position := poScreenCenter;
+    FormEditSerialsDialog.Show;
+    ShowWindow(FormEditSerialsDialog.Handle, SW_RESTORE);
+end;
+
+procedure TFormOxygen73.N8Click(Sender: TObject);
+begin
+    if MessageBox(Handle, 'Подтвердите необходимость создания новой партии.',
+      'Запрос подтверждения', mb_IconQuestion or mb_YesNo) <> mrYes then
+        exit;
+    MainSvcApi.createNewParty;
+    FormCatalogue.FetchYearsMonths;
+end;
 
 end.

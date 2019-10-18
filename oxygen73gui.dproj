@@ -165,6 +165,10 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="UnitMeasurement.pas"/>
+        <DCCReference Include="UnitFormEditSerialsDialog.pas">
+            <Form>FormEditSerialsDialog</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
