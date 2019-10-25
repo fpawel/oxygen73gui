@@ -47,7 +47,7 @@ uses myutils, dateutils, UnitFormOxygen73, UnitFormProducts, math,
 
 function formatPartyTime(t: int64): string;
 begin
-    result := FormatDateTime('dd.mm.yy hh:nn', unixMillisToDateTime(t))
+    result := FormatDateTime('dd/mm hh:nn', unixMillisToDateTime(t))
 end;
 
 procedure TFormCatalogue.FormCreate(Sender: TObject);
@@ -123,18 +123,16 @@ begin
         RowCount := FBuckets.Count + 1;
         if RowCount = 1 then
             exit;
-
+        ColCount := 4;
         FixedRows := 1;
         Cells[0, 0] := 'День';
         Cells[1, 0] := 'Начало';
         Cells[2, 0] := 'Конец';
         Cells[3, 0] := 'Загрузка';
-        Cells[4, 0] := 'Создана';
         ColWidths[0] := 40;
         ColWidths[1] := 70;
         ColWidths[2] := 70;
-        ColWidths[3] := 70;
-        ColWidths[4] := 120;
+        ColWidths[3] := 160;
 
         for I := 0 to FBuckets.Count - 1 do
             with FBuckets[I] do
@@ -145,10 +143,7 @@ begin
                   TimeToStr(IncHour(unixMillisToDateTime(CreatedAt), -3));
                 Cells[2, I + 1] :=
                   TimeToStr(IncHour(unixMillisToDateTime(UpdatedAt), -3));
-
-                Cells[3, I + 1] := Inttostr(PartyID);
-
-                Cells[4, I + 1] := formatPartyTime(PartyCreatedAt);
+                Cells[3, I + 1] := Format('№%d %s', [PartyID, formatPartyTime(PartyCreatedAt)]);
             end;
         Row := RowCount - 1;
         OnSelectCell := StringGrid1SelectCell;

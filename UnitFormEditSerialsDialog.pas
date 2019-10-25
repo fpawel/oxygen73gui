@@ -13,12 +13,10 @@ type
         StringGrid1: TStringGrid;
         procedure StringGrid1DrawCell(Sender: TObject; ACol, ARow: Integer;
           Rect: TRect; State: TGridDrawState);
-        procedure FormDeactivate(Sender: TObject);
         procedure FormCreate(Sender: TObject);
         procedure StringGrid1SetEditText(Sender: TObject; ACol, ARow: Integer;
           const Value: string);
     procedure FormShow(Sender: TObject);
-    procedure FormHide(Sender: TObject);
     private
         { Private declarations }
         FProducts: IThriftList<IProduct>;
@@ -49,16 +47,6 @@ begin
         FixedCols := 0;
         FixedRows := 0;
     end;
-end;
-
-procedure TFormEditSerialsDialog.FormDeactivate(Sender: TObject);
-begin
-    Hide;
-end;
-
-procedure TFormEditSerialsDialog.FormHide(Sender: TObject);
-begin
-    FormCatalogue.ComboBox1Change(FormCatalogue.ComboBox1);
 end;
 
 procedure TFormEditSerialsDialog.FormShow(Sender: TObject);

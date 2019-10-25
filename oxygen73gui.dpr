@@ -44,7 +44,9 @@ uses
   myutils in 'utils\myutils.pas',
   UnitFormOxygen73 in 'UnitFormOxygen73.pas' {FormOxygen73},
   UnitMeasurement in 'UnitMeasurement.pas',
-  UnitFormEditSerialsDialog in 'UnitFormEditSerialsDialog.pas' {FormEditSerialsDialog};
+  UnitFormEditSerialsDialog in 'UnitFormEditSerialsDialog.pas' {FormEditSerialsDialog},
+  UnitFormAppConfig in 'UnitFormAppConfig.pas' {FormAppConfig},
+  UnitFormEditAppConfigToml in 'UnitFormEditAppConfigToml.pas' {FormEditAppConfigToml};
 
 {$R *.res}
 
@@ -60,6 +62,8 @@ begin
   Application.CreateForm(TFormConsole, FormConsole);
   Application.CreateForm(TFormPopup, FormPopup);
   Application.CreateForm(TFormEditSerialsDialog, FormEditSerialsDialog);
+  Application.CreateForm(TFormAppConfig, FormAppConfig);
+  Application.CreateForm(TFormEditAppConfigToml, FormEditAppConfigToml);
   Application.Run;
 
 end.

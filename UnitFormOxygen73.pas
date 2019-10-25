@@ -51,6 +51,8 @@ type
         procedure FormCreate(Sender: TObject);
         procedure N6Click(Sender: TObject);
         procedure N8Click(Sender: TObject);
+    procedure N4Click(Sender: TObject);
+    procedure N5Click(Sender: TObject);
     private
         { Private declarations }
         FEnableCopyData: Boolean;
@@ -72,7 +74,8 @@ uses Grijjy.Bson, Grijjy.Bson.Serialization, dateutils, JclDebug, vclutils,
     UnitFormCatalogue, UnitFormProducts,
     UnitFormChart, unitmeasurement,
     math, logfile, Thrift.Transport, UnitFormJournal, stringgridutils, myutils,
-    apitypes, UnitFormEditSerialsDialog;
+    apitypes, UnitFormEditSerialsDialog, UnitFormAppConfig,
+  UnitFormEditAppConfigToml;
 
 {$R *.dfm}
 
@@ -116,7 +119,6 @@ begin
                 FormShow(Sender);
             exit;
         end;
-
     end;
 
     with FormCatalogue do
@@ -219,20 +221,35 @@ end;
 
 procedure TFormOxygen73.HandleStatus(m: TStatusMessage);
 begin
-    Panel5.Font.Color := clRed;
+
     if m.Ok then
-        Panel5.Font.Color := clNavy;
+        Panel5.Font.Color := clNavy
+    else
+        Panel5.Font.Color := clRed;
+    Panel6.Font.Color := Panel5.Font.Color;
     Panel5.Caption := TimeToStr(now);
     Panel6.Caption := m.Text;
     Panel6.Hint := m.Detail;
     Panel6.ShowHint := true;
 end;
 
+procedure TFormOxygen73.N4Click(Sender: TObject);
+begin
+    FormAppConfig.Position := poScreenCenter;
+    FormAppConfig.ShowModal;
+end;
+
+procedure TFormOxygen73.N5Click(Sender: TObject);
+begin
+    FormEditAppConfigToml.Position := poScreenCenter;
+    FormEditAppConfigToml.ShowModal;
+end;
+
 procedure TFormOxygen73.N6Click(Sender: TObject);
 begin
     FormEditSerialsDialog.Position := poScreenCenter;
-    FormEditSerialsDialog.Show;
-    ShowWindow(FormEditSerialsDialog.Handle, SW_RESTORE);
+    FormEditSerialsDialog.ShowModal;
+    FormCatalogue.ComboBox1Change(FormCatalogue.ComboBox1);
 end;
 
 procedure TFormOxygen73.N8Click(Sender: TObject);

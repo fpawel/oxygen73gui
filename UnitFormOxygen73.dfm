@@ -29,7 +29,7 @@ object FormOxygen73: TFormOxygen73
     ShowCaption = False
     TabOrder = 0
     object Splitter1: TSplitter
-      Left = 265
+      Left = 393
       Top = 31
       Width = 5
       Height = 556
@@ -39,9 +39,9 @@ object FormOxygen73: TFormOxygen73
       ExplicitLeft = 184
     end
     object Panel2: TPanel
-      Left = 270
+      Left = 398
       Top = 31
-      Width = 637
+      Width = 509
       Height = 556
       Align = alClient
       BevelOuter = bvNone
@@ -49,10 +49,12 @@ object FormOxygen73: TFormOxygen73
       Constraints.MinHeight = 100
       ShowCaption = False
       TabOrder = 0
+      ExplicitLeft = 270
+      ExplicitWidth = 637
       object Splitter2: TSplitter
         Left = 0
         Top = 250
-        Width = 637
+        Width = 509
         Height = 5
         Cursor = crVSplit
         Align = alTop
@@ -66,19 +68,20 @@ object FormOxygen73: TFormOxygen73
       object Panel3: TPanel
         Left = 0
         Top = 0
-        Width = 637
+        Width = 509
         Height = 250
         Align = alTop
         BevelOuter = bvNone
         Caption = 'Panel1'
         ShowCaption = False
         TabOrder = 0
+        ExplicitWidth = 637
       end
     end
     object Panel4: TPanel
       Left = 0
       Top = 31
-      Width = 265
+      Width = 393
       Height = 556
       Align = alLeft
       BevelOuter = bvNone
@@ -602,10 +605,12 @@ object FormOxygen73: TFormOxygen73
       object N4: TMenuItem
         Caption = #1054#1089#1085#1086#1074#1085#1099#1077
         ImageIndex = 1
+        OnClick = N4Click
       end
       object N5: TMenuItem
         Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077
         ImageIndex = 0
+        OnClick = N5Click
       end
     end
     object N2: TMenuItem

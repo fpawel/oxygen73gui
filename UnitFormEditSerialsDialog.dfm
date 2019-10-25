@@ -1,9 +1,10 @@
 object FormEditSerialsDialog: TFormEditSerialsDialog
   Left = 0
   Top = 0
+  BorderStyle = bsDialog
   Caption = #1042#1074#1086#1076' '#1089#1077#1088#1080#1081#1085#1099#1093' '#1085#1086#1084#1077#1088#1086#1074' '#1069#1061#1071
-  ClientHeight = 375
-  ClientWidth = 635
+  ClientHeight = 331
+  ClientWidth = 556
   Color = clBtnHighlight
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,8 +13,6 @@ object FormEditSerialsDialog: TFormEditSerialsDialog
   Font.Style = []
   OldCreateOrder = False
   OnCreate = FormCreate
-  OnDeactivate = FormDeactivate
-  OnHide = FormHide
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 16
@@ -21,8 +20,8 @@ object FormEditSerialsDialog: TFormEditSerialsDialog
     AlignWithMargins = True
     Left = 3
     Top = 3
-    Width = 629
-    Height = 369
+    Width = 550
+    Height = 325
     Align = alClient
     BiDiMode = bdLeftToRight
     BorderStyle = bsNone
@@ -46,8 +45,6 @@ object FormEditSerialsDialog: TFormEditSerialsDialog
     TabOrder = 0
     OnDrawCell = StringGrid1DrawCell
     OnSetEditText = StringGrid1SetEditText
-    ExplicitLeft = 8
-    ExplicitTop = -2
     RowHeights = (
       22)
   end
