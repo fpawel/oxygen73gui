@@ -11,14 +11,13 @@ uses
     VclTee.Chart, Vcl.Menus, Vcl.Imaging.pngimage;
 
 type
-    TCopyDataCmd = (cdcWriteConsole, cdcStatus, cdcNewMeasurements,
-      cdcMeasurements);
+    TCopyDataCmd = (cdcWriteConsole, cdcStatusComport, cdcStatusComportHum,
+      cdcNewMeasurements, cdcMeasurements);
 
     TStatusMessage = record
     public
         Ok: Boolean;
         Text: string;
-        Detail: string;
     end;
 
     TFormOxygen73 = class(TForm)
@@ -41,6 +40,8 @@ type
         N6: TMenuItem;
         N7: TMenuItem;
         N8: TMenuItem;
+    Panel7: TPanel;
+    Panel8: TPanel;
         procedure FormShow(Sender: TObject);
         procedure Splitter1Moved(Sender: TObject);
         procedure Splitter2Moved(Sender: TObject);
@@ -51,12 +52,13 @@ type
         procedure FormCreate(Sender: TObject);
         procedure N6Click(Sender: TObject);
         procedure N8Click(Sender: TObject);
-    procedure N4Click(Sender: TObject);
-    procedure N5Click(Sender: TObject);
+        procedure N4Click(Sender: TObject);
+        procedure N5Click(Sender: TObject);
     private
         { Private declarations }
         FEnableCopyData: Boolean;
-        procedure HandleStatus(m: TStatusMessage);
+        procedure HandleStatusComport(m: TStatusMessage);
+        procedure HandleStatusComportHum(m: TStatusMessage);
 
         procedure HandleCopydata(var Message: TMessage); message WM_COPYDATA;
         function ExceptionDialog(e: Exception): Boolean;
@@ -75,7 +77,7 @@ uses Grijjy.Bson, Grijjy.Bson.Serialization, dateutils, JclDebug, vclutils,
     UnitFormChart, unitmeasurement,
     math, logfile, Thrift.Transport, UnitFormJournal, stringgridutils, myutils,
     apitypes, UnitFormEditSerialsDialog, UnitFormAppConfig,
-  UnitFormEditAppConfigToml;
+    UnitFormEditAppConfigToml;
 
 {$R *.dfm}
 
@@ -171,8 +173,10 @@ begin
     case TCopyDataCmd(Message.WParam) of
         cdcWriteConsole:
             FormJournal.NewEntry(getCopyDataStr(Message));
-        cdcStatus:
-            HandleStatus(TJsonCD.unmarshal<TStatusMessage>(Message));
+        cdcStatusComport:
+            HandleStatusComport(TJsonCD.unmarshal<TStatusMessage>(Message));
+        cdcStatusComportHum:
+            HandleStatusComportHum(TJsonCD.unmarshal<TStatusMessage>(Message));
         cdcNewMeasurements:
             FormCatalogue.HandleNewMeasurements
               (TMeasurement.DeserializeMeasurements(cd.lpData));
@@ -219,18 +223,30 @@ begin
         Close;
 end;
 
-procedure TFormOxygen73.HandleStatus(m: TStatusMessage);
+procedure TFormOxygen73.HandleStatusComport(m: TStatusMessage);
 begin
 
     if m.Ok then
-        Panel5.Font.Color := clNavy
+        Panel6.Font.Color := clNavy
     else
-        Panel5.Font.Color := clRed;
-    Panel6.Font.Color := Panel5.Font.Color;
+        Panel6.Font.Color := clRed;
     Panel5.Caption := TimeToStr(now);
     Panel6.Caption := m.Text;
-    Panel6.Hint := m.Detail;
+    Panel6.Hint := m.Text;
     Panel6.ShowHint := true;
+end;
+
+procedure TFormOxygen73.HandleStatusComportHum(m: TStatusMessage);
+begin
+
+    if m.Ok then
+        Panel8.Font.Color := clNavy
+    else
+        Panel8.Font.Color := clRed;
+    Panel7.Caption := TimeToStr(now);
+    Panel8.Caption := m.Text;
+    Panel8.Hint := m.Text;
+    Panel8.ShowHint := true;
 end;
 
 procedure TFormOxygen73.N4Click(Sender: TObject);

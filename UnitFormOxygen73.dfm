@@ -3,7 +3,7 @@ object FormOxygen73: TFormOxygen73
   Top = 0
   Caption = #1069#1061#1071' O2'
   ClientHeight = 587
-  ClientWidth = 907
+  ClientWidth = 1088
   Color = clWindow
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,40 +21,44 @@ object FormOxygen73: TFormOxygen73
   object PanelMain: TPanel
     Left = 0
     Top = 0
-    Width = 907
+    Width = 1088
     Height = 587
     Align = alClient
     BevelOuter = bvNone
     Caption = 'PanelMain'
     ShowCaption = False
     TabOrder = 0
+    ExplicitWidth = 907
     object Splitter1: TSplitter
       Left = 393
-      Top = 31
+      Top = 30
       Width = 5
-      Height = 556
+      Height = 557
       Color = clGradientInactiveCaption
       ParentColor = False
       OnMoved = Splitter1Moved
       ExplicitLeft = 184
+      ExplicitTop = 31
+      ExplicitHeight = 556
     end
     object Panel2: TPanel
       Left = 398
-      Top = 31
-      Width = 509
-      Height = 556
+      Top = 30
+      Width = 690
+      Height = 557
       Align = alClient
       BevelOuter = bvNone
       Caption = 'Panel1'
       Constraints.MinHeight = 100
       ShowCaption = False
       TabOrder = 0
-      ExplicitLeft = 270
-      ExplicitWidth = 637
+      ExplicitTop = 31
+      ExplicitWidth = 509
+      ExplicitHeight = 556
       object Splitter2: TSplitter
         Left = 0
         Top = 250
-        Width = 509
+        Width = 690
         Height = 5
         Cursor = crVSplit
         Align = alTop
@@ -68,32 +72,34 @@ object FormOxygen73: TFormOxygen73
       object Panel3: TPanel
         Left = 0
         Top = 0
-        Width = 509
+        Width = 690
         Height = 250
         Align = alTop
         BevelOuter = bvNone
         Caption = 'Panel1'
         ShowCaption = False
         TabOrder = 0
-        ExplicitWidth = 637
+        ExplicitWidth = 509
       end
     end
     object Panel4: TPanel
       Left = 0
-      Top = 31
+      Top = 30
       Width = 393
-      Height = 556
+      Height = 557
       Align = alLeft
       BevelOuter = bvNone
       Caption = 'Panel4'
       ShowCaption = False
       TabOrder = 1
+      ExplicitTop = 31
+      ExplicitHeight = 556
     end
     object PanelTop: TPanel
       Left = 0
       Top = 0
-      Width = 907
-      Height = 31
+      Width = 1088
+      Height = 30
       Align = alTop
       Alignment = taLeftJustify
       BevelOuter = bvNone
@@ -111,7 +117,7 @@ object FormOxygen73: TFormOxygen73
         Left = 5
         Top = 5
         Width = 68
-        Height = 21
+        Height = 20
         Margins.Left = 5
         Margins.Top = 5
         Margins.Right = 5
@@ -126,13 +132,60 @@ object FormOxygen73: TFormOxygen73
         Font.Style = []
         ParentFont = False
         TabOrder = 0
+        ExplicitHeight = 21
       end
       object Panel6: TPanel
         AlignWithMargins = True
         Left = 83
         Top = 5
-        Width = 819
-        Height = 21
+        Width = 462
+        Height = 20
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        Align = alLeft
+        Alignment = taLeftJustify
+        BevelOuter = bvNone
+        Caption = '-'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clGreen
+        Font.Height = -15
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 1
+        ExplicitHeight = 15
+      end
+      object Panel7: TPanel
+        AlignWithMargins = True
+        Left = 555
+        Top = 5
+        Width = 68
+        Height = 20
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
+        Align = alLeft
+        BevelOuter = bvNone
+        Caption = '-'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clGreen
+        Font.Height = -15
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 2
+        ExplicitLeft = 661
+        ExplicitHeight = 15
+      end
+      object Panel8: TPanel
+        AlignWithMargins = True
+        Left = 633
+        Top = 5
+        Width = 450
+        Height = 20
         Margins.Left = 5
         Margins.Top = 5
         Margins.Right = 5
@@ -147,7 +200,10 @@ object FormOxygen73: TFormOxygen73
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        TabOrder = 1
+        TabOrder = 3
+        ExplicitLeft = 5
+        ExplicitWidth = 572
+        ExplicitHeight = 15
       end
     end
   end
