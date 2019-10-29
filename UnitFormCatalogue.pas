@@ -29,8 +29,8 @@ type
     public
         { Public declarations }
         property SelectedBucket: IBucket read FSelectedBucket;
-        property LastBucket: IBucket read getLastBucket;
-        procedure FetchYearsMonths;
+        //property LastBucket: IBucket read getLastBucket;
+        procedure ReloadData;
         procedure HandleNewMeasurements(ms: TArray<TMeasurement>);
         procedure HandleMeasurements(ms: TArray<TMeasurement>);
     end;
@@ -53,6 +53,21 @@ end;
 procedure TFormCatalogue.FormCreate(Sender: TObject);
 begin
     FSelectedBucket := nil;
+
+    with StringGrid1 do
+    begin
+        ColCount := 5;
+        Cells[0, 0] := 'День';
+        Cells[1, 0] := 'Начало';
+        Cells[2, 0] := 'Конец';
+        Cells[3, 0] := 'Партия';
+        Cells[4, 0] := 'Загрузка';
+        ColWidths[0] := 40;
+        ColWidths[1] := 70;
+        ColWidths[2] := 70;
+        ColWidths[3] := 70;
+        ColWidths[4] := 120;
+    end;
 end;
 
 procedure TFormCatalogue.HandleNewMeasurements(ms: TArray<TMeasurement>);
@@ -61,6 +76,7 @@ var
     value: double;
     m: TMeasurement;
 begin
+    ReloadData;
     with StringGrid1 do
         if (ComboBox1.ItemIndex <> 0) or (Row <> RowCount - 1) then
             exit;
@@ -113,27 +129,18 @@ end;
 procedure TFormCatalogue.ComboBox1Change(Sender: TObject);
 var
     I: Integer;
-    CanSelect: Boolean;
+    prevRowIsLast, CanSelect: Boolean;
 begin
     with StringGrid1 do
     begin
         OnSelectCell := nil;
         with FYearMonth[ComboBox1.ItemIndex] do
             FBuckets := MainSvcApi.listBucketsOfYearMonth(year, month);
+        prevRowIsLast := Row = RowCount-1;
         RowCount := FBuckets.Count + 1;
         if RowCount = 1 then
             exit;
-        ColCount := 4;
         FixedRows := 1;
-        Cells[0, 0] := 'День';
-        Cells[1, 0] := 'Начало';
-        Cells[2, 0] := 'Конец';
-        Cells[3, 0] := 'Загрузка';
-        ColWidths[0] := 40;
-        ColWidths[1] := 70;
-        ColWidths[2] := 70;
-        ColWidths[3] := 160;
-
         for I := 0 to FBuckets.Count - 1 do
             with FBuckets[I] do
             begin
@@ -143,17 +150,18 @@ begin
                   TimeToStr(IncHour(unixMillisToDateTime(CreatedAt), -3));
                 Cells[2, I + 1] :=
                   TimeToStr(IncHour(unixMillisToDateTime(UpdatedAt), -3));
-                Cells[3, I + 1] := Format('№%d %s', [PartyID, formatPartyTime(PartyCreatedAt)]);
+                Cells[3, I + 1] := IntToStr(PartyID);
+                Cells[4, I + 1] := formatPartyTime(PartyCreatedAt);
             end;
-        Row := RowCount - 1;
+        if prevRowIsLast then
+          Row := RowCount - 1;
         OnSelectCell := StringGrid1SelectCell;
         StringGrid1SelectCell(StringGrid1, 0, Row, CanSelect);
-
     end;
 
 end;
 
-procedure TFormCatalogue.FetchYearsMonths;
+procedure TFormCatalogue.ReloadData;
 var
     I: Integer;
 

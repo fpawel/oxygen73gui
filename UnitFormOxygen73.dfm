@@ -28,7 +28,6 @@ object FormOxygen73: TFormOxygen73
     Caption = 'PanelMain'
     ShowCaption = False
     TabOrder = 0
-    ExplicitWidth = 907
     object Splitter1: TSplitter
       Left = 393
       Top = 30
@@ -52,9 +51,6 @@ object FormOxygen73: TFormOxygen73
       Constraints.MinHeight = 100
       ShowCaption = False
       TabOrder = 0
-      ExplicitTop = 31
-      ExplicitWidth = 509
-      ExplicitHeight = 556
       object Splitter2: TSplitter
         Left = 0
         Top = 250
@@ -79,7 +75,6 @@ object FormOxygen73: TFormOxygen73
         Caption = 'Panel1'
         ShowCaption = False
         TabOrder = 0
-        ExplicitWidth = 509
       end
     end
     object Panel4: TPanel
@@ -92,8 +87,6 @@ object FormOxygen73: TFormOxygen73
       Caption = 'Panel4'
       ShowCaption = False
       TabOrder = 1
-      ExplicitTop = 31
-      ExplicitHeight = 556
     end
     object PanelTop: TPanel
       Left = 0
@@ -132,7 +125,6 @@ object FormOxygen73: TFormOxygen73
         Font.Style = []
         ParentFont = False
         TabOrder = 0
-        ExplicitHeight = 21
       end
       object Panel6: TPanel
         AlignWithMargins = True
@@ -155,7 +147,6 @@ object FormOxygen73: TFormOxygen73
         Font.Style = []
         ParentFont = False
         TabOrder = 1
-        ExplicitHeight = 15
       end
       object Panel7: TPanel
         AlignWithMargins = True
@@ -177,8 +168,6 @@ object FormOxygen73: TFormOxygen73
         Font.Style = []
         ParentFont = False
         TabOrder = 2
-        ExplicitLeft = 661
-        ExplicitHeight = 15
       end
       object Panel8: TPanel
         AlignWithMargins = True
@@ -201,9 +190,6 @@ object FormOxygen73: TFormOxygen73
         Font.Style = []
         ParentFont = False
         TabOrder = 3
-        ExplicitLeft = 5
-        ExplicitWidth = 572
-        ExplicitHeight = 15
       end
     end
   end

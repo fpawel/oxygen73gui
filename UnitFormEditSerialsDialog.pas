@@ -16,7 +16,7 @@ type
         procedure FormCreate(Sender: TObject);
         procedure StringGrid1SetEditText(Sender: TObject; ACol, ARow: Integer;
           const Value: string);
-    procedure FormShow(Sender: TObject);
+        procedure FormShow(Sender: TObject);
     private
         { Private declarations }
         FProducts: IThriftList<IProduct>;
@@ -101,7 +101,7 @@ var
     v: Integer;
     r: TRect;
 begin
-    
+
     With StringGrid1 do
     begin
         if EditorMode then
@@ -115,17 +115,17 @@ begin
         OnSetEditText := nil;
         try
             if TryStrToInt(Value, v) = true then
-                MainSvcApi.setLastPartyProductSerialAtPlace(ACol * 10 + ARow, v)
+                MainSvcApi.setProductSerialAtPlace(ACol * 10 + ARow, v)
+            else if Value = '' then
+                MainSvcApi.deleteProductAtPlace(ACol * 10 + ARow)
             else
-                Cells[ACol,ARow] := '';
+                Cells[ACol, ARow] := '';
         finally
             OnSetEditText := StringGrid1SetEditText;
         end;
     end;
 
 end;
-
-
 
 procedure TFormEditSerialsDialog.SetupStringGrid;
 Var

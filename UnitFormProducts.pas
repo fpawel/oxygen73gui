@@ -92,6 +92,7 @@ begin
             end;
 
     end;
+    FormChart.UpdateRightAxis;
 end;
 
 procedure TFormProducts.SetParty(APartyID: int64; AProducts:IThriftList<IProduct>);

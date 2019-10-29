@@ -18,17 +18,17 @@ type
         ToolButton3: TToolButton;
         Panel11: TPanel;
         GridPanel1: TGridPanel;
-        MemoX: TMemo;
-        MemoY1: TMemo;
-        MemoY2: TMemo;
         Chart1: TChart;
+        PanelX: TPanel;
+        PanelY: TPanel;
+        PanelT: TPanel;
+        PanelP: TPanel;
+        PanelH: TPanel;
         procedure FormCreate(Sender: TObject);
         procedure Chart1UndoZoom(Sender: TObject);
         procedure Chart1AfterDraw(Sender: TObject);
         procedure ToolButton1Click(Sender: TObject);
         procedure ToolButton3Click(Sender: TObject);
-        procedure MemoXMouseMove(Sender: TObject; Shift: TShiftState;
-          X, Y: Integer);
     private
         { Private declarations }
         FAxisTemp, FAxisPress, FAxisHum: TChartAxis;
@@ -251,6 +251,9 @@ procedure TFormChart.Chart1UndoZoom(Sender: TObject);
 begin
     Chart1.BottomAxis.Automatic := true;
     Chart1.LeftAxis.Automatic := true;
+    FAxisTemp.Automatic := true;
+    FAxisTemp.Automatic := true;
+    FAxisHum.Automatic := true;
 end;
 
 procedure TFormChart.SetActiveSeries(ser: TFastLineSeries);
@@ -283,16 +286,22 @@ begin
     exit(nil);
 end;
 
-procedure TFormChart.MemoXMouseMove(Sender: TObject; Shift: TShiftState;
-  X, Y: Integer);
-begin
-    TMemo(Sender).SetFocus;
-end;
-
 procedure TFormChart.ShowCurrentScaleValues;
 var
     s, s1, s2, s3: string;
     v: double;
+    procedure ShowAxisOrders(ax: TChartAxis; pn: TPanel; prefix:string);
+    begin
+        with ax do
+        begin
+            if Maximum = Minimum then
+                pn.Caption := prefix+': нет значений'
+            else
+                pn.Caption := prefix+': ' + FormatFloat('#0.0##', Maximum - Minimum);
+        end;
+
+    end;
+
 begin
 
     with Chart1.Axes.Bottom do
@@ -317,22 +326,11 @@ begin
             s := inttostr(daysBetween(Maximum, Minimum)) + ' дней';
 
     end;
-    MemoX.Text := Format('X: %s', [s]);
-    with Chart1.Axes.Left do
-    begin
-        if Maximum = Minimum then
-            MemoY1.Text := 'Y1: нет значений'
-        else
-            MemoY1.Text := Format('Y1: %g', [Maximum - Minimum]);
-    end;
-    with Chart1.Axes.Right do
-    begin
-        if Maximum = Minimum then
-            MemoY2.Text := 'Y2: нет значений'
-        else
-            MemoY2.Text := Format('Y2: %g', [Maximum - Minimum]);
-    end;
-
+    PanelX.Caption := Format('X: %s', [s]);
+    ShowAxisOrders(Chart1.Axes.Left, PanelY, 'Y');
+    ShowAxisOrders(Chart1.Axes.Right, PanelT, 'T');
+    ShowAxisOrders(FAxisPress, PanelP, 'P');
+    ShowAxisOrders(FAxisHum, PanelH, 'H');
 end;
 
 procedure TFormChart.ToolButton1Click(Sender: TObject);
@@ -352,14 +350,22 @@ end;
 procedure TFormChart.ChangeAxisOrder(c: TWinControl; WheelDelta: Integer);
 var
     a: TChartAxis;
+
     step: double;
 begin
-    if c = MemoY1 then
+    if c = PanelY then
         a := Chart1.LeftAxis
-    else if c = MemoX then
+    else if c = PanelX then
         a := Chart1.BottomAxis
-    else if c = MemoY2 then
+    else if c = PanelT then
         a := Chart1.RightAxis
+
+    else if c = PanelP then
+        a := FAxisPress
+
+    else if c = PanelH then
+        a := FAxisHum
+
     else
         exit;
     if a.Minimum = a.Maximum then
@@ -388,35 +394,40 @@ begin
         exit;
     end;
 
-    if not FSeriesTemp.Visible and FSeriesPress.Visible and not FSeriesHum.Visible  then
+    if not FSeriesTemp.Visible and FSeriesPress.Visible and not FSeriesHum.Visible
+    then
     begin
         Chart1.MarginRight := 50;
         FAxisPress.PositionPercent := 0;
         exit;
     end;
 
-    if not FSeriesTemp.Visible and not FSeriesPress.Visible and FSeriesHum.Visible  then
+    if not FSeriesTemp.Visible and not FSeriesPress.Visible and FSeriesHum.Visible
+    then
     begin
         Chart1.MarginRight := 50;
         FAxisHum.PositionPercent := 0;
         exit;
     end;
 
-    if FSeriesTemp.Visible and FSeriesPress.Visible and not FSeriesHum.Visible  then
+    if FSeriesTemp.Visible and FSeriesPress.Visible and not FSeriesHum.Visible
+    then
     begin
         Chart1.MarginRight := 100;
         FAxisPress.PositionPercent := -80;
         exit;
     end;
 
-    if FSeriesTemp.Visible and not FSeriesPress.Visible and FSeriesHum.Visible  then
+    if FSeriesTemp.Visible and not FSeriesPress.Visible and FSeriesHum.Visible
+    then
     begin
         Chart1.MarginRight := 100;
         FAxisHum.PositionPercent := -80;
         exit;
     end;
 
-    if not FSeriesTemp.Visible and FSeriesPress.Visible and FSeriesHum.Visible  then
+    if not FSeriesTemp.Visible and FSeriesPress.Visible and FSeriesHum.Visible
+    then
     begin
         Chart1.MarginRight := 100;
         FAxisPress.PositionPercent := 0;
@@ -424,7 +435,7 @@ begin
         exit;
     end;
 
-    if FSeriesTemp.Visible and FSeriesPress.Visible and FSeriesHum.Visible  then
+    if FSeriesTemp.Visible and FSeriesPress.Visible and FSeriesHum.Visible then
     begin
         Chart1.MarginRight := 170;
         FAxisPress.PositionPercent := -80;

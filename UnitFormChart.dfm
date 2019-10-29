@@ -3,7 +3,7 @@ object FormChart: TFormChart
   Top = 0
   Caption = 'FormChart'
   ClientHeight = 299
-  ClientWidth = 635
+  ClientWidth = 1010
   Color = clWindow
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,24 +17,19 @@ object FormChart: TFormChart
   object Panel5: TPanel
     Left = 0
     Top = 0
-    Width = 635
-    Height = 32
+    Width = 1010
+    Height = 33
     Align = alTop
     Alignment = taLeftJustify
     BevelOuter = bvNone
     Color = clGradientInactiveCaption
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clGray
-    Font.Height = -16
-    Font.Name = 'Tahoma'
-    Font.Style = [fsBold]
     ParentBackground = False
-    ParentFont = False
     TabOrder = 0
     object ToolBar1: TToolBar
-      Left = 569
+      Left = 944
       Top = 0
       Width = 66
+      Height = 33
       Align = alRight
       ButtonHeight = 31
       ButtonWidth = 32
@@ -43,6 +38,8 @@ object FormChart: TFormChart
       EdgeOuter = esNone
       Images = ImageList1
       TabOrder = 0
+      ExplicitLeft = 569
+      ExplicitHeight = 32
       object ToolButton1: TToolButton
         Left = 0
         Top = 0
@@ -69,43 +66,61 @@ object FormChart: TFormChart
     object Panel11: TPanel
       Left = 0
       Top = 0
-      Width = 569
-      Height = 32
+      Width = 944
+      Height = 33
       Align = alClient
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 1
+      ExplicitWidth = 569
+      ExplicitHeight = 32
       object GridPanel1: TGridPanel
         Left = 0
         Top = 0
-        Width = 569
-        Height = 32
+        Width = 944
+        Height = 33
         Align = alClient
         BevelOuter = bvNone
         ColumnCollection = <
           item
-            Value = 33.335384447808890000
+            Value = 19.999999551627530000
           end
           item
-            Value = 33.332089500221010000
+            Value = 19.999999285221560000
           end
           item
-            Value = 33.332526051970110000
+            Value = 20.000000337540950000
+          end
+          item
+            Value = 20.000000583641010000
+          end
+          item
+            Value = 20.000000241968950000
           end>
         ControlCollection = <
           item
             Column = 0
-            Control = MemoX
+            Control = PanelX
             Row = 0
           end
           item
             Column = 1
-            Control = MemoY1
+            Control = PanelY
             Row = 0
           end
           item
             Column = 2
-            Control = MemoY2
+            Control = PanelT
+            Row = 0
+          end
+          item
+            Column = 3
+            Control = PanelP
+            Row = 0
+          end
+          item
+            Column = 4
+            Control = PanelH
             Row = 0
           end>
         RowCollection = <
@@ -113,86 +128,69 @@ object FormChart: TFormChart
             Value = 100.000000000000000000
           end>
         TabOrder = 0
-        object MemoX: TMemo
-          AlignWithMargins = True
-          Left = 3
-          Top = 10
-          Width = 183
-          Height = 19
-          Margins.Top = 10
-          Align = alClient
-          Alignment = taCenter
-          BorderStyle = bsNone
-          Color = clGradientInactiveCaption
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -12
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          Lines.Strings = (
-            'Memo1')
-          ParentFont = False
-          ReadOnly = True
-          TabOrder = 0
-          WordWrap = False
-          OnMouseMove = MemoXMouseMove
-        end
-        object MemoY1: TMemo
-          AlignWithMargins = True
-          Left = 192
-          Top = 10
-          Width = 183
-          Height = 19
-          Margins.Top = 10
-          Align = alClient
-          Alignment = taCenter
-          BorderStyle = bsNone
-          Color = clGradientInactiveCaption
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -12
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          Lines.Strings = (
-            'Memo1')
-          ParentFont = False
-          ReadOnly = True
-          TabOrder = 1
-          WordWrap = False
-          OnMouseMove = MemoXMouseMove
-        end
-        object MemoY2: TMemo
-          AlignWithMargins = True
-          Left = 381
-          Top = 10
+        ExplicitWidth = 569
+        ExplicitHeight = 32
+        DesignSize = (
+          944
+          33)
+        object PanelX: TPanel
+          Left = 1
+          Top = 0
           Width = 185
-          Height = 19
-          Margins.Top = 10
-          Align = alClient
-          Alignment = taCenter
-          BorderStyle = bsNone
-          Color = clGradientInactiveCaption
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -12
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          Lines.Strings = (
-            'Memo1')
-          ParentFont = False
-          ReadOnly = True
+          Height = 33
+          Anchors = []
+          BevelOuter = bvNone
+          Caption = 'PanelX'
+          TabOrder = 0
+        end
+        object PanelY: TPanel
+          Left = 189
+          Top = 0
+          Width = 185
+          Height = 33
+          Anchors = []
+          BevelOuter = bvNone
+          Caption = 'PanelX'
+          TabOrder = 1
+        end
+        object PanelT: TPanel
+          Left = 377
+          Top = 0
+          Width = 185
+          Height = 33
+          Anchors = []
+          BevelOuter = bvNone
+          Caption = 'PanelX'
           TabOrder = 2
-          WordWrap = False
-          OnMouseMove = MemoXMouseMove
+        end
+        object PanelP: TPanel
+          Left = 565
+          Top = 0
+          Width = 185
+          Height = 33
+          Anchors = []
+          BevelOuter = bvNone
+          Caption = 'PanelX'
+          TabOrder = 3
+        end
+        object PanelH: TPanel
+          Left = 755
+          Top = 0
+          Width = 185
+          Height = 33
+          Anchors = []
+          BevelOuter = bvNone
+          Caption = 'PanelX'
+          TabOrder = 4
         end
       end
     end
   end
   object Chart1: TChart
     Left = 0
-    Top = 32
-    Width = 635
-    Height = 267
+    Top = 33
+    Width = 1010
+    Height = 266
     Legend.Title.Visible = False
     Legend.Visible = False
     MarginRight = 10
@@ -214,6 +212,9 @@ object FormChart: TFormChart
     BevelOuter = bvNone
     Color = clWindow
     TabOrder = 1
+    ExplicitTop = 32
+    ExplicitWidth = 635
+    ExplicitHeight = 267
     DefaultCanvas = 'TGDIPlusCanvas'
     ColorPaletteIndex = -2
     ColorPalette = (

@@ -129,7 +129,7 @@ begin
         Font.Assign(Self.Font);
         BorderStyle := bsNone;
         Align := alClient;
-        FetchYearsMonths;
+        ReloadData;
         Show;
     end;
 
@@ -274,7 +274,8 @@ begin
       'Запрос подтверждения', mb_IconQuestion or mb_YesNo) <> mrYes then
         exit;
     MainSvcApi.createNewParty;
-    FormCatalogue.FetchYearsMonths;
+    FormEditSerialsDialog.Position := poScreenCenter;
+    FormEditSerialsDialog.ShowModal;
 end;
 
 end.
