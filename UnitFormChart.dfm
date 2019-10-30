@@ -38,8 +38,6 @@ object FormChart: TFormChart
       EdgeOuter = esNone
       Images = ImageList1
       TabOrder = 0
-      ExplicitLeft = 569
-      ExplicitHeight = 32
       object ToolButton1: TToolButton
         Left = 0
         Top = 0
@@ -72,8 +70,6 @@ object FormChart: TFormChart
       BevelOuter = bvNone
       ParentColor = True
       TabOrder = 1
-      ExplicitWidth = 569
-      ExplicitHeight = 32
       object GridPanel1: TGridPanel
         Left = 0
         Top = 0
@@ -128,8 +124,6 @@ object FormChart: TFormChart
             Value = 100.000000000000000000
           end>
         TabOrder = 0
-        ExplicitWidth = 569
-        ExplicitHeight = 32
         DesignSize = (
           944
           33)
@@ -191,6 +185,10 @@ object FormChart: TFormChart
     Top = 33
     Width = 1010
     Height = 266
+    Legend.Alignment = laBottom
+    Legend.CheckBoxes = True
+    Legend.FontSeriesColor = True
+    Legend.Title.Font.Height = -19
     Legend.Title.Visible = False
     Legend.Visible = False
     MarginRight = 10
@@ -212,27 +210,8 @@ object FormChart: TFormChart
     BevelOuter = bvNone
     Color = clWindow
     TabOrder = 1
-    ExplicitTop = 32
-    ExplicitWidth = 635
-    ExplicitHeight = 267
+    ExplicitTop = 39
     DefaultCanvas = 'TGDIPlusCanvas'
-    ColorPaletteIndex = -2
-    ColorPalette = (
-      255
-      16711680
-      11048782
-      7028779
-      6519581
-      919731
-      10708548
-      1330417
-      10401629
-      7368816
-      8388863
-      3513587
-      0
-      16711808
-      32768)
   end
   object ImageList1: TImageList
     ColorDepth = cd32Bit

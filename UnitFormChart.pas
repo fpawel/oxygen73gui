@@ -43,8 +43,10 @@ type
         procedure ChangeAxisOrder(c: TWinControl; WheelDelta: Integer);
 
         procedure AddMeasurement(m: TMeasurement);
+        procedure AddProductMeasurement(m: TProductMeasurement; place: Integer);
 
         procedure UpdateRightAxis;
+        procedure Save;
 
         property ActiveSeries: TFastLineSeries read GetActiveSeries
           write SetActiveSeries;
@@ -58,7 +60,7 @@ implementation
 
 {$R *.dfm}
 
-uses dateutils, math, System.Types;
+uses dateutils, math, System.Types, UnitAppIni;
 
 procedure TFormChart.FormCreate(Sender: TObject);
 var
@@ -134,7 +136,22 @@ begin
     end;
 
     for i := 0 to Chart1.SeriesCount - 1 do
-        Chart1.Series[i].Active := false;
+    begin
+        Chart1.Series[i].Active := AppIni.ReadBool('series.active',
+          inttostr(i), false);
+    end;
+    UpdateRightAxis;
+end;
+
+procedure TFormChart.Save;
+var
+    i: Integer;
+begin
+    for i := 0 to Chart1.SeriesCount - 1 do
+    begin
+        AppIni.WriteBool('series.active', inttostr(i), Chart1.Series[i].Active);
+    end;
+
 end;
 
 procedure TFormChart.AddMeasurement(m: TMeasurement);
@@ -150,6 +167,22 @@ begin
     for i := 0 to 49 do
         if (m.Places[i] <> 112) and (not IsNaN(m.Places[i])) then
             FSeriesPlace[i].AddNullXY(m.StoredAt, m.Places[i]);
+end;
+
+procedure TFormChart.AddProductMeasurement(m: TProductMeasurement;
+  place: Integer);
+var
+    i: Integer;
+begin
+    if not IsNaN(m.Temperature) then
+        FSeriesTemp.AddXY(m.StoredAt, m.Temperature);
+    if not IsNaN(m.Pressure) then
+        FSeriesPress.AddXY(m.StoredAt, m.Pressure);
+    if not IsNaN(m.Humidity) then
+        FSeriesHum.AddXY(m.StoredAt, m.Humidity);
+
+    if (m.Value <> 112) and (not IsNaN(m.Value)) then
+        FSeriesPlace[place].AddNullXY(m.StoredAt, m.Value);
 end;
 
 procedure TFormChart.Chart1AfterDraw(Sender: TObject);
@@ -290,14 +323,15 @@ procedure TFormChart.ShowCurrentScaleValues;
 var
     s, s1, s2, s3: string;
     v: double;
-    procedure ShowAxisOrders(ax: TChartAxis; pn: TPanel; prefix:string);
+    procedure ShowAxisOrders(ax: TChartAxis; pn: TPanel; prefix: string);
     begin
         with ax do
         begin
             if Maximum = Minimum then
-                pn.Caption := prefix+': нет значений'
+                pn.Caption := prefix + ': нет значений'
             else
-                pn.Caption := prefix+': ' + FormatFloat('#0.0##', Maximum - Minimum);
+                pn.Caption := prefix + ': ' + FormatFloat('#0.0##',
+                  Maximum - Minimum);
         end;
 
     end;

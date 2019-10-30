@@ -86,7 +86,8 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Debugger_IncludeSystemVars>true</Debugger_IncludeSystemVars>
-        <Debugger_EnvVars>OXYGEN73_DEVMODE=true;$(Debugger_EnvVars)</Debugger_EnvVars>
+        <Debugger_EnvVars>OXYGEN73_DEVMODE=true;OXYGEN73_API_PORT=60002;$(Debugger_EnvVars)</Debugger_EnvVars>
+        <DCC_ExeOutput>$(GOPATH)\src\github.com\fpawel\oxygen73\build</DCC_ExeOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -147,14 +148,6 @@
         <DCCReference Include="grijjy\Grijjy.Bson.IO.pas"/>
         <DCCReference Include="grijjy\Grijjy.BinaryCoding.pas"/>
         <DCCReference Include="grijjy\Grijjy.Collections.pas"/>
-        <DCCReference Include="UnitFormJournal.pas">
-            <Form>FormJournal</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="UnitFormConsole.pas">
-            <Form>FormConsole</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="UnitFormPopup.pas">
             <Form>FormPopup</Form>
             <FormType>dfm</FormType>
@@ -175,6 +168,15 @@
         </DCCReference>
         <DCCReference Include="UnitFormEditAppConfigToml.pas">
             <Form>FormEditAppConfigToml</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="UnitAppIni.pas"/>
+        <DCCReference Include="UnitFormFoundProducts.pas">
+            <Form>FormFoundProducts</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="UnitFormConsole.pas">
+            <Form>FormConsole</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
@@ -203,7 +205,7 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="Win32\Debug\oxygen73gui.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="C:\GOPATH\src\github.com\fpawel\oxygen73\build\oxygen73gui.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>oxygen73gui.exe</RemoteName>
                         <Overwrite>true</Overwrite>

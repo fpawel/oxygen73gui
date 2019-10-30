@@ -38,15 +38,16 @@ uses
   Grijjy.Bson.IO in 'grijjy\Grijjy.Bson.IO.pas',
   Grijjy.BinaryCoding in 'grijjy\Grijjy.BinaryCoding.pas',
   Grijjy.Collections in 'grijjy\Grijjy.Collections.pas',
-  UnitFormJournal in 'UnitFormJournal.pas' {FormJournal},
-  UnitFormConsole in 'UnitFormConsole.pas' {FormConsole},
   UnitFormPopup in 'UnitFormPopup.pas' {FormPopup},
   myutils in 'utils\myutils.pas',
   UnitFormOxygen73 in 'UnitFormOxygen73.pas' {FormOxygen73},
   UnitMeasurement in 'UnitMeasurement.pas',
   UnitFormEditSerialsDialog in 'UnitFormEditSerialsDialog.pas' {FormEditSerialsDialog},
   UnitFormAppConfig in 'UnitFormAppConfig.pas' {FormAppConfig},
-  UnitFormEditAppConfigToml in 'UnitFormEditAppConfigToml.pas' {FormEditAppConfigToml};
+  UnitFormEditAppConfigToml in 'UnitFormEditAppConfigToml.pas' {FormEditAppConfigToml},
+  UnitAppIni in 'UnitAppIni.pas',
+  UnitFormFoundProducts in 'UnitFormFoundProducts.pas' {FormFoundProducts},
+  UnitFormConsole in 'UnitFormConsole.pas' {FormConsole};
 
 {$R *.res}
 
@@ -58,12 +59,13 @@ begin
   Application.CreateForm(TFormChart, FormChart);
   Application.CreateForm(TFormProducts, FormProducts);
   Application.CreateForm(TFormCatalogue, FormCatalogue);
-  Application.CreateForm(TFormJournal, FormJournal);
   Application.CreateForm(TFormConsole, FormConsole);
   Application.CreateForm(TFormPopup, FormPopup);
   Application.CreateForm(TFormEditSerialsDialog, FormEditSerialsDialog);
   Application.CreateForm(TFormAppConfig, FormAppConfig);
   Application.CreateForm(TFormEditAppConfigToml, FormEditAppConfigToml);
+  Application.CreateForm(TFormFoundProducts, FormFoundProducts);
+  Application.CreateForm(TFormConsole, FormConsole);
   Application.Run;
 
 end.

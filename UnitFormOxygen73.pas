@@ -8,11 +8,9 @@ uses
     Vcl.Controls, Vcl.Forms, Vcl.Dialogs, MainSvcClient,
     Vcl.ComCtrls, Vcl.ToolWin, Vcl.StdCtrls, Vcl.ExtCtrls, System.ImageList,
     Vcl.ImgList, VclTee.TeeGDIPlus, VclTee.TeEngine, VclTee.TeeProcs,
-    VclTee.Chart, Vcl.Menus, Vcl.Imaging.pngimage;
+    VclTee.Chart, Vcl.Menus, Vcl.Imaging.pngimage, UnitFormConsole;
 
 type
-    TCopyDataCmd = (cdcWriteConsole, cdcStatusComport, cdcStatusComportHum,
-      cdcNewMeasurements, cdcMeasurements);
 
     TStatusMessage = record
     public
@@ -27,7 +25,7 @@ type
         Splitter2: TSplitter;
         Panel3: TPanel;
         Panel4: TPanel;
-        PanelTop: TPanel;
+        PanelBottom: TPanel;
         Panel5: TPanel;
         Panel6: TPanel;
         Splitter1: TSplitter;
@@ -40,20 +38,22 @@ type
         N6: TMenuItem;
         N7: TMenuItem;
         N8: TMenuItem;
-    Panel7: TPanel;
-    Panel8: TPanel;
+        Panel7: TPanel;
+        Panel8: TPanel;
+        N9: TMenuItem;
         procedure FormShow(Sender: TObject);
         procedure Splitter1Moved(Sender: TObject);
         procedure Splitter2Moved(Sender: TObject);
         procedure FormMouseWheel(Sender: TObject; Shift: TShiftState;
           WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
         procedure FormClose(Sender: TObject; var Action: TCloseAction);
-        procedure ToolButton1Click(Sender: TObject);
         procedure FormCreate(Sender: TObject);
         procedure N6Click(Sender: TObject);
         procedure N8Click(Sender: TObject);
         procedure N4Click(Sender: TObject);
         procedure N5Click(Sender: TObject);
+        procedure N9Click(Sender: TObject);
+        procedure N3Click(Sender: TObject);
     private
         { Private declarations }
         FEnableCopyData: Boolean;
@@ -72,12 +72,12 @@ var
 
 implementation
 
-uses Grijjy.Bson, Grijjy.Bson.Serialization, dateutils, JclDebug, vclutils,
+uses Grijjy.Bson, Grijjy.Bson.Serialization, dateutils, vclutils, JclDebug,
     UnitFormCatalogue, UnitFormProducts,
-    UnitFormChart, unitmeasurement,
-    math, logfile, Thrift.Transport, UnitFormJournal, stringgridutils, myutils,
+    UnitFormChart, unitmeasurement, math, logfile, Thrift.Transport,
+    stringgridutils, myutils,
     apitypes, UnitFormEditSerialsDialog, UnitFormAppConfig,
-    UnitFormEditAppConfigToml;
+    UnitFormEditAppConfigToml, UnitFormFoundProducts, UnitAppIni;
 
 {$R *.dfm}
 
@@ -85,6 +85,10 @@ type
     TJsonCD = class
         class function unmarshal<T>(Message: TMessage): T; static;
     end;
+
+    TCopyDataCmd = (cdcWriteConsole, cdcStatusComport, cdcStatusComportHum,
+      cdcNewMeasurements, cdcMeasurements, cdcProductMeasurements,
+      cdcErrorOccurred);
 
 function getCopyDataStr(Message: TMessage): string;
 var
@@ -159,6 +163,8 @@ end;
 procedure TFormOxygen73.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     FEnableCopyData := false;
+    FormChart.Save;
+    // if Length(GetEnvironmentVariable('OXYGEN73_DEV_MODE')) > 0 then
     // SendMessage(FindWindow('Oxygen73WindowClass', ''), WM_CLOSE, 0,0);
 end;
 
@@ -172,7 +178,7 @@ begin
     Message.Result := 1;
     case TCopyDataCmd(Message.WParam) of
         cdcWriteConsole:
-            FormJournal.NewEntry(getCopyDataStr(Message));
+            FormConsole.NewLine(getCopyDataStr(Message));
         cdcStatusComport:
             HandleStatusComport(TJsonCD.unmarshal<TStatusMessage>(Message));
         cdcStatusComportHum:
@@ -183,6 +189,13 @@ begin
         cdcMeasurements:
             FormCatalogue.HandleMeasurements
               (TMeasurement.DeserializeMeasurements(cd.lpData));
+        cdcProductMeasurements:
+            FormFoundProducts.HandleMeasurements
+              (TProductMeasurement.DeserializeMeasurements(cd.lpData));
+        cdcErrorOccurred:
+            begin
+                AppException(Self, Exception.Create(getCopyDataStr(Message)));
+            end;
     else
         raise Exception.Create('wrong message: ' + IntToStr(Message.WParam));
     end;
@@ -202,11 +215,6 @@ end;
 procedure TFormOxygen73.Splitter2Moved(Sender: TObject);
 begin
     OutputDebugStringW(PWideChar(IntToStr(FormProducts.StringGrid1.Height)));
-end;
-
-procedure TFormOxygen73.ToolButton1Click(Sender: TObject);
-begin
-    FormJournal.Show;
 end;
 
 function TFormOxygen73.ExceptionDialog(e: Exception): Boolean;
@@ -249,6 +257,13 @@ begin
     Panel8.ShowHint := true;
 end;
 
+procedure TFormOxygen73.N3Click(Sender: TObject);
+begin
+    FormConsole.Position := poScreenCenter;
+    FormConsole.Show;
+
+end;
+
 procedure TFormOxygen73.N4Click(Sender: TObject);
 begin
     FormAppConfig.Position := poScreenCenter;
@@ -276,6 +291,22 @@ begin
     MainSvcApi.createNewParty;
     FormEditSerialsDialog.Position := poScreenCenter;
     FormEditSerialsDialog.ShowModal;
+end;
+
+procedure TFormOxygen73.N9Click(Sender: TObject);
+var
+    value: string;
+    serial: Integer;
+begin
+    value := AppIni.ReadString('input', 'serial', '');
+    if not InputQuery('ѕоиск Ё’я по номеру', '¬ведите серийный номер Ё’я', value)
+    then
+        exit;
+    AppIni.WriteString('input', 'serial', value);
+    serial := StrToInt(value);
+    FormFoundProducts.Upload(serial);
+    FormFoundProducts.ShowModal;
+
 end;
 
 end.

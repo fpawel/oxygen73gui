@@ -13,6 +13,14 @@ type
 
     TLogLevel = (loglevDebug, loglevInfo, loglevWarn, loglevError);
 
+    TEntry = record
+        FLevel: TLogLevel;
+        FTime1, FTime2: TDateTime;
+        FText: string;
+        FCount: integer;
+
+    end;
+
     TFormConsole = class(TForm)
         ImageList4: TImageList;
         StringGrid1: TStringGrid;
@@ -29,11 +37,13 @@ type
 
     private
         { Private declarations }
+        FEntries: TArray<TEntry>;
 
     public
         FFileName: string;
         { Public declarations }
-        procedure NewLine(t: TDateTime; AText: string);
+        procedure NewLine(AText: string);
+        procedure NewLineLevel(ALevel: TLogLevel; AText: string);
         procedure Clear;
     end;
 
@@ -42,29 +52,12 @@ var
 
 implementation
 
-uses FireDAC.Comp.Client, Rest.Json, dateutils, stringutils,
+uses dateutils, stringutils,
     stringgridutils, strutils, types,
     UnitFormPopup;
 
 {$R *.dfm}
 
-function parseLogLevel(s: String): TLogLevel;
-var
-    xs: TStringDynArray;
-begin
-    xs := SplitString(s, ' ');
-    result := loglevDebug;
-    if (length(xs) > 1) then
-    begin
-        s := LowerCase(xs[1]);
-        if s = 'inf' then
-            result := loglevInfo
-        else if s = 'wrn' then
-            result := loglevWarn
-        else if s = 'err' then
-            result := loglevError
-    end;
-end;
 
 function loglevelColor(lev: TLogLevel): Tcolor;
 begin
@@ -82,22 +75,35 @@ begin
     end;
 end;
 
+function formatEntryText(r: TEntry): string;
+begin
+    result := r.FText;
+    if r.FCount > 1 then
+        result := Format('%s [%d] %s', [formatDatetime('hh:mm:ss', r.FTime2),
+          r.FCount, r.FText]);
+end;
+
 procedure TFormConsole.FormCreate(Sender: TObject);
 begin
-    // SetLength(FEntries, 0);
+    SetLength(FEntries, 0);
 end;
 
 procedure TFormConsole.FormResize(Sender: TObject);
 begin
     with StringGrid1 do
     begin
-        ColWidths[0] := 90;
+        ColWidths[0] := 70;
         ColWidths[1] := self.Width - ColWidths[0] - 30;
     end;
 end;
 
 procedure TFormConsole.StringGrid1DblClick(Sender: TObject);
+var
+    r: TRect;
+    pt: TPoint;
 begin
+    if StringGrid1.Row >= length(FEntries) then
+            exit;
     FormPopup.ShowStringGridCellText(StringGrid1);
 end;
 
@@ -122,15 +128,16 @@ begin
 
     ta := taLeftJustify;
 
-    case ACol of
-        0:
-            cnv.Font.Color := clGreen;
-        1:
-            cnv.Font.Color := loglevelColor(parseLogLevel(AText));
-    end;
+    if ARow < length(FEntries) then
+        with FEntries[ARow] do
+            case ACol of
+                0:
+                    cnv.Font.Color := loglevelColor(FLevel);
+                1:
+                    cnv.Font.Color := loglevelColor(FLevel);
+            end;
 
-    StringGrid_DrawCellText(StringGrid1, ACol, ARow, Rect, ta,
-      StringGrid1.Cells[ACol, ARow]);
+    StringGrid_DrawCellText(StringGrid1, ACol, ARow, Rect, ta, StringGrid1.Cells[ACol,ARow]);
     // StringGrid_DrawCellBounds(StringGrid1.Canvas, ACol, ARow, Rect);
 end;
 
@@ -167,20 +174,68 @@ begin
     StringGrid_CopytoClipboard(StringGrid1);
 end;
 
-procedure TFormConsole.NewLine(t: TDateTime; AText: string);
+function parseLogLevel(s: String): TLogLevel;
+var
+    xs: TStringDynArray;
+begin
+    xs := SplitString(s, ' ');
+    result := loglevDebug;
+    if (length(xs) > 1) then
+    begin
+        s := LowerCase(xs[1]);
+        if s = 'inf' then
+            result := loglevInfo
+        else if s = 'wrn' then
+            result := loglevWarn
+        else if s = 'err' then
+            result := loglevError
+    end;
+end;
+
+procedure TFormConsole.NewLineLevel(ALevel: TLogLevel; AText: string);
 begin
 
     with StringGrid1 do
     begin
-        if not ( (RowCount = 1) AND (Cells[0, 0] = '') ) then
+        if (length(FEntries) > 0) ANd
+          (FEntries[length(FEntries) - 1].FText = AText) then
+            with FEntries[length(FEntries) - 1] do
+            begin
+                FCount := FCount + 1;
+                FTime2 := now;
+                StringGrid_RedrawRow(StringGrid1, RowCount - 1);
+                exit;
+            end;
+
+        SetLength(FEntries, length(FEntries) + 1);
+        with FEntries[length(FEntries) - 1] do
+        begin
+            FLevel := ALevel;
+            FText := AText;
+            FTime1 := now;
+            FTime2 := now;
+            FCount := 1;
+        end;
+        if length(FEntries) = 1 then
+            StringGrid_RedrawRow(StringGrid1, RowCount - 1)
+        else
             RowCount := RowCount + 1;
+        Row := RowCount - 1;
+        with FEntries[length(FEntries) - 1] do
+        begin
+            Cells[0, Row] := formatDatetime('hh:mm:ss', FTime1);
+            Cells[1, Row] := formatEntryText(FEntries[Row]);
+        end;
 
-        if Row = RowCount - 2 then
-            Row := RowCount - 1;
 
-        Cells[0, RowCount - 1] := formatDatetime('hh:mm:ss.zzz', t);
-        Cells[1, RowCount - 1] := AText;
+
+
     end;
+end;
+
+procedure TFormConsole.NewLine(AText: string);
+begin
+    NewLineLevel(parseLogLevel(AText), AText);
 end;
 
 end.

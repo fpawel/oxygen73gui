@@ -26,11 +26,12 @@ object FormOxygen73: TFormOxygen73
     Align = alClient
     BevelOuter = bvNone
     Caption = 'PanelMain'
+    ParentColor = True
     ShowCaption = False
     TabOrder = 0
     object Splitter1: TSplitter
       Left = 393
-      Top = 30
+      Top = 0
       Width = 5
       Height = 557
       Color = clGradientInactiveCaption
@@ -42,7 +43,7 @@ object FormOxygen73: TFormOxygen73
     end
     object Panel2: TPanel
       Left = 398
-      Top = 30
+      Top = 0
       Width = 690
       Height = 557
       Align = alClient
@@ -79,7 +80,7 @@ object FormOxygen73: TFormOxygen73
     end
     object Panel4: TPanel
       Left = 0
-      Top = 30
+      Top = 0
       Width = 393
       Height = 557
       Align = alLeft
@@ -88,21 +89,21 @@ object FormOxygen73: TFormOxygen73
       ShowCaption = False
       TabOrder = 1
     end
-    object PanelTop: TPanel
+    object PanelBottom: TPanel
       Left = 0
-      Top = 0
+      Top = 557
       Width = 1088
       Height = 30
-      Align = alTop
+      Align = alBottom
       Alignment = taLeftJustify
       BevelOuter = bvNone
-      Color = clGradientInactiveCaption
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
       Font.Height = -15
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentBackground = False
+      ParentColor = True
       ParentFont = False
       TabOrder = 2
       object Panel5: TPanel
@@ -630,16 +631,20 @@ object FormOxygen73: TFormOxygen73
     Left = 334
     Top = 127
     object N7: TMenuItem
-      Caption = #1055#1072#1088#1090#1080#1103' '#1069#1061#1071
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1069#1061#1071
       object N6: TMenuItem
         Caption = #1042#1074#1086#1076' '#1089#1077#1088#1080#1081#1085#1099#1093' '#1085#1086#1084#1077#1088#1086#1074
         ImageIndex = 4
         OnClick = N6Click
       end
       object N8: TMenuItem
-        Caption = #1057#1086#1079#1076#1072#1090#1100' '#1085#1086#1074#1091#1102
+        Caption = #1057#1086#1079#1076#1072#1090#1100' '#1085#1086#1074#1091#1102' '#1079#1072#1075#1088#1091#1079#1082#1091
         ImageIndex = 5
         OnClick = N8Click
+      end
+      object N9: TMenuItem
+        Caption = #1055#1086#1080#1089#1082' '#1069#1061#1071' '#1087#1086' '#1089#1077#1088#1080#1081#1085#1086#1084#1091' '#1085#1086#1084#1077#1088#1091
+        OnClick = N9Click
       end
     end
     object N1: TMenuItem
@@ -660,6 +665,7 @@ object FormOxygen73: TFormOxygen73
       object N3: TMenuItem
         Caption = #1050#1086#1085#1089#1086#1083#1100
         ImageIndex = 2
+        OnClick = N3Click
       end
     end
   end
