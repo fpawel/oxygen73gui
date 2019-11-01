@@ -13,9 +13,15 @@ type
         StoredAt: TDateTime;
 
         class function Deserialize(var p: Pointer): TMeasurement; static;
-        class function DeserializeMeasurements(var p: Pointer): TArray<TMeasurement>;  static;
 
     end;
+
+    TMeasurements = record
+        BucketID : int64;
+        Measurements : TArray<TMeasurement>;
+        class function Deserialize(var p: Pointer): TMeasurements;  static;
+    end;
+
 
     TProductMeasurement = record
     public
@@ -26,22 +32,30 @@ type
         StoredAt: TDateTime;
 
         class function Deserialize(var p: Pointer): TProductMeasurement; static;
-        class function DeserializeMeasurements(var p: Pointer): TArray<TProductMeasurement>;  static;
+    end;
 
+    TProductMeasurements = record
+        BucketID : int64;
+        Measurements : TArray<TProductMeasurement>;
+        class function Deserialize(var p: Pointer): TProductMeasurements;  static;
     end;
 
 implementation
 
 uses myutils;
 
-class function TMeasurement.DeserializeMeasurements(var p: Pointer): TArray<TMeasurement>;
+class function TMeasurements.Deserialize(var p: Pointer): TMeasurements;
 var i,measurementsCount:int64;
 begin
+    Result.BucketID := PInt64(p)^;
+    Inc(PByte(p), 8);
+
     measurementsCount := PInt64(p)^;
     Inc(PByte(p), 8);
-    SetLength(Result, measurementsCount);
+
+    SetLength(Result.Measurements, measurementsCount);
     for i:=0 to measurementsCount-1 do
-        Result[i] := TMeasurement.Deserialize(p);
+        Result.Measurements[i] := TMeasurement.Deserialize(p);
 end;
 
 class function TMeasurement.Deserialize(var p: Pointer): TMeasurement;
@@ -69,14 +83,19 @@ begin
 end;
 
 
-class function TProductMeasurement.DeserializeMeasurements(var p: Pointer): TArray<TProductMeasurement>;
+class function TProductMeasurements.Deserialize(var p: Pointer): TProductMeasurements;
 var i,measurementsCount:int64;
 begin
+
+    Result.BucketID := PInt64(p)^;
+    Inc(PByte(p), 8);
+
     measurementsCount := PInt64(p)^;
     Inc(PByte(p), 8);
-    SetLength(Result, measurementsCount);
+
+    SetLength(Result.Measurements, measurementsCount);
     for i:=0 to measurementsCount-1 do
-        Result[i] := TProductMeasurement.Deserialize(p);
+        Result.Measurements[i] := TProductMeasurement.Deserialize(p);
 end;
 
 class function TProductMeasurement.Deserialize(var p: Pointer): TProductMeasurement;

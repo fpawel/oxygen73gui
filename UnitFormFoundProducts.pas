@@ -26,7 +26,7 @@ type
     public
         { Public declarations }
         procedure Upload(serial: Integer);
-        procedure HandleMeasurements(ms: TArray<TProductMeasurement>);
+        procedure HandleMeasurements(ms: TProductMeasurements);
     end;
 
 var
@@ -179,21 +179,22 @@ begin
 
 end;
 
-procedure TFormFoundProducts.HandleMeasurements(ms: TArray<TProductMeasurement>);
+procedure TFormFoundProducts.HandleMeasurements(ms: TProductMeasurements);
 var
     I: Integer;
     m : TProductMeasurement;
 begin
     StringGrid1.Enabled := true;
 
-    if not Assigned(FFormChart) or not Assigned(FSelectedIProductBucket) then
+    if not Assigned(FFormChart) or not Assigned(FSelectedIProductBucket) or
+    (FSelectedIProductBucket.BucketID <> ms.BucketID) then
         exit;
 
     FFormChart.FSeriesTemp.Clear;
     FFormChart.FSeriesPress.Clear;
     FFormChart.FSeriesHum.Clear;
     FFormChart.FSeriesPlace[FSelectedIProductBucket.Place].Clear;
-    for m in ms do
+    for m in ms.Measurements do
         FFormChart.AddProductMeasurement(m, FSelectedIProductBucket.Place);
     FFormChart.Show;
 end;

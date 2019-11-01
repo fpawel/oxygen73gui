@@ -29,10 +29,10 @@ type
     public
         { Public declarations }
         property SelectedBucket: IBucket read FSelectedBucket;
-        //property LastBucket: IBucket read getLastBucket;
+        // property LastBucket: IBucket read getLastBucket;
         procedure ReloadData;
-        procedure HandleNewMeasurements(ms: TArray<TMeasurement>);
-        procedure HandleMeasurements(ms: TArray<TMeasurement>);
+        procedure HandleNewMeasurements(ms: TMeasurements);
+        procedure HandleMeasurements(ms: TMeasurements);
     end;
 
 var
@@ -70,29 +70,29 @@ begin
     end;
 end;
 
-procedure TFormCatalogue.HandleNewMeasurements(ms: TArray<TMeasurement>);
+procedure TFormCatalogue.HandleNewMeasurements(ms: TMeasurements);
 var
     I: Integer;
     value: double;
     m: TMeasurement;
 begin
     ReloadData;
-    with StringGrid1 do
-        if (ComboBox1.ItemIndex <> 0) or (Row <> RowCount - 1) then
-            exit;
+    if not Assigned(FSelectedBucket) or (FSelectedBucket.BucketID <> ms.BucketID)
+    then
+        exit;
 
     FBuckets[FBuckets.Count - 1].UpdatedAt :=
       DateTimeToUnixMillis(IncHour(now, 3));
     with FormCatalogue.StringGrid1 do
         Cells[2, RowCount - 1] := TimeToStr(now);
-    for m in ms do
+    for m in ms.Measurements do
         FormChart.AddMeasurement(m);
     for I := 0 to 49 do
         FormProducts.RedrawPlace(I);
     FormProducts.RedrawAmbient;
 end;
 
-procedure TFormCatalogue.HandleMeasurements(ms: TArray<TMeasurement>);
+procedure TFormCatalogue.HandleMeasurements(ms: TMeasurements);
 var
     I: Integer;
     value: double;
@@ -101,7 +101,7 @@ var
     CreatedAt, UpdatedAt: TDateTime;
 begin
     buk := self.SelectedBucket;
-    if not Assigned(buk) then
+    if not Assigned(buk) or (buk.BucketID <> ms.BucketID) then
         exit;
     FormChart.FSeriesTemp.Clear;
     FormChart.FSeriesPress.Clear;
@@ -110,7 +110,7 @@ begin
         FormChart.FSeriesPlace[I].Clear;
     CreatedAt := IncHour(unixMillisToDateTime(buk.CreatedAt), -3);
     UpdatedAt := IncHour(unixMillisToDateTime(buk.UpdatedAt), -3);
-    for m in ms do
+    for m in ms.Measurements do
         if (m.StoredAt >= CreatedAt) and (m.StoredAt <= UpdatedAt) then
             FormChart.AddMeasurement(m);
     for I := 0 to 49 do
@@ -136,7 +136,7 @@ begin
         OnSelectCell := nil;
         with FYearMonth[ComboBox1.ItemIndex] do
             FBuckets := MainSvcApi.listBucketsOfYearMonth(year, month);
-        prevRowIsLast := Row = RowCount-1;
+        prevRowIsLast := Row = RowCount - 1;
         RowCount := FBuckets.Count + 1;
         if RowCount = 1 then
             exit;
@@ -154,7 +154,7 @@ begin
                 Cells[4, I + 1] := formatPartyTime(PartyCreatedAt);
             end;
         if prevRowIsLast then
-          Row := RowCount - 1;
+            Row := RowCount - 1;
         OnSelectCell := StringGrid1SelectCell;
         StringGrid1SelectCell(StringGrid1, 0, Row, CanSelect);
     end;
@@ -163,9 +163,10 @@ end;
 
 procedure TFormCatalogue.ReloadData;
 var
-    I: Integer;
+    ComboBox1ItemIndex, I: Integer;
 
 begin
+    ComboBox1ItemIndex := ComboBox1.ItemIndex;
     FYearMonth := MainSvcApi.listYearMonths;
     ComboBox1.Clear;
     if FYearMonth.Count = 0 then
@@ -180,7 +181,7 @@ begin
             ComboBox1.Items.Add(Format('%d %s',
               [year, FormatDateTime('MMMM', IncMonth(0, month))]));
 
-    ComboBox1.ItemIndex := 0;
+    ComboBox1.ItemIndex := ComboBox1ItemIndex;
     ComboBox1Change(nil);
 end;
 
@@ -238,7 +239,7 @@ var
     party: IParty;
     t: TDateTime;
     I: Integer;
-    products : IThriftList<IProduct>;
+    products: IThriftList<IProduct>;
 begin
     if ARow - 1 >= FBuckets.Count then
     begin

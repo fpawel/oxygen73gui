@@ -185,13 +185,13 @@ begin
             HandleStatusComportHum(TJsonCD.unmarshal<TStatusMessage>(Message));
         cdcNewMeasurements:
             FormCatalogue.HandleNewMeasurements
-              (TMeasurement.DeserializeMeasurements(cd.lpData));
+              (TMeasurements.Deserialize(cd.lpData));
         cdcMeasurements:
             FormCatalogue.HandleMeasurements
-              (TMeasurement.DeserializeMeasurements(cd.lpData));
+              (TMeasurements.Deserialize(cd.lpData));
         cdcProductMeasurements:
             FormFoundProducts.HandleMeasurements
-              (TProductMeasurement.DeserializeMeasurements(cd.lpData));
+              (TProductMeasurements.Deserialize(cd.lpData));
         cdcErrorOccurred:
             begin
                 AppException(Self, Exception.Create(getCopyDataStr(Message)));
