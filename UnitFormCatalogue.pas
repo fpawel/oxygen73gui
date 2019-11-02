@@ -254,8 +254,7 @@ begin
           Cells[1, ARow], Cells[2, ARow]]);
     products := MainSvcApi.listProducts(party.PartyID);
     FormProducts.SetParty(party.PartyID, products);
-    MainSvcApi.requestMeasurements(FSelectedBucket.CreatedAt,
-      FSelectedBucket.UpdatedAt);
+    MainSvcApi.requestMeasurements(FSelectedBucket.BucketID);
 
 end;
 

@@ -44,7 +44,7 @@ uses
   UnitMeasurement in 'UnitMeasurement.pas',
   UnitFormEditSerialsDialog in 'UnitFormEditSerialsDialog.pas' {FormEditSerialsDialog},
   UnitFormAppConfig in 'UnitFormAppConfig.pas' {FormAppConfig},
-  UnitFormEditAppConfigToml in 'UnitFormEditAppConfigToml.pas' {FormEditAppConfigToml},
+  UnitFormEditAppConfig in 'UnitFormEditAppConfig.pas' {FormEditAppConfig},
   UnitAppIni in 'UnitAppIni.pas',
   UnitFormFoundProducts in 'UnitFormFoundProducts.pas' {FormFoundProducts},
   UnitFormConsole in 'UnitFormConsole.pas' {FormConsole};
@@ -63,7 +63,7 @@ begin
   Application.CreateForm(TFormPopup, FormPopup);
   Application.CreateForm(TFormEditSerialsDialog, FormEditSerialsDialog);
   Application.CreateForm(TFormAppConfig, FormAppConfig);
-  Application.CreateForm(TFormEditAppConfigToml, FormEditAppConfigToml);
+  Application.CreateForm(TFormEditAppConfig, FormEditAppConfig);
   Application.CreateForm(TFormFoundProducts, FormFoundProducts);
   Application.CreateForm(TFormConsole, FormConsole);
   Application.Run;

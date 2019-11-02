@@ -1,4 +1,4 @@
-object FormEditAppConfigToml: TFormEditAppConfigToml
+object FormEditAppConfig: TFormEditAppConfig
   Left = 0
   Top = 0
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1082#1086#1085#1092#1080#1075#1091#1088#1072#1094#1080#1080

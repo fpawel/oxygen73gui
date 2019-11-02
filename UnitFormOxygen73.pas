@@ -77,7 +77,7 @@ uses Grijjy.Bson, Grijjy.Bson.Serialization, dateutils, vclutils, JclDebug,
     UnitFormChart, unitmeasurement, math, logfile, Thrift.Transport,
     stringgridutils, myutils,
     apitypes, UnitFormEditSerialsDialog, UnitFormAppConfig,
-    UnitFormEditAppConfigToml, UnitFormFoundProducts, UnitAppIni;
+    UnitFormEditAppConfig, UnitFormFoundProducts, UnitAppIni;
 
 {$R *.dfm}
 
@@ -272,8 +272,8 @@ end;
 
 procedure TFormOxygen73.N5Click(Sender: TObject);
 begin
-    FormEditAppConfigToml.Position := poScreenCenter;
-    FormEditAppConfigToml.ShowModal;
+    FormEditAppConfig.Position := poScreenCenter;
+    FormEditAppConfig.ShowModal;
 end;
 
 procedure TFormOxygen73.N6Click(Sender: TObject);

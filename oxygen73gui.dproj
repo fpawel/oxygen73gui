@@ -86,7 +86,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Debugger_IncludeSystemVars>true</Debugger_IncludeSystemVars>
-        <Debugger_EnvVars>OXYGEN73_DEVMODE=true;OXYGEN73_API_PORT=60002;$(Debugger_EnvVars)</Debugger_EnvVars>
+        <Debugger_EnvVars>OXYGEN73_DEVMODE=true;OXYGEN73_API_PORT=60003;$(Debugger_EnvVars)</Debugger_EnvVars>
         <DCC_ExeOutput>$(GOPATH)\src\github.com\fpawel\oxygen73\build</DCC_ExeOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -166,8 +166,8 @@
             <Form>FormAppConfig</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="UnitFormEditAppConfigToml.pas">
-            <Form>FormEditAppConfigToml</Form>
+        <DCCReference Include="UnitFormEditAppConfig.pas">
+            <Form>FormEditAppConfig</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="UnitAppIni.pas"/>

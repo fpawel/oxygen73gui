@@ -1,4 +1,4 @@
-unit UnitFormEditAppConfigToml;
+unit UnitFormEditAppConfig;
 
 interface
 
@@ -9,7 +9,7 @@ uses
     System.ImageList, Vcl.ImgList, Vcl.StdCtrls;
 
 type
-    TFormEditAppConfigToml = class(TForm)
+    TFormEditAppConfig = class(TForm)
         ImageList4: TImageList;
         ToolBarStop: TToolBar;
         ToolButton2: TToolButton;
@@ -27,7 +27,7 @@ type
     end;
 
 var
-    FormEditAppConfigToml: TFormEditAppConfigToml;
+    FormEditAppConfig: TFormEditAppConfig;
 
 implementation
 
@@ -35,22 +35,22 @@ implementation
 
 uses Winapi.RichEdit, System.Character, MainSvcClient;
 
-procedure TFormEditAppConfigToml.FormDeactivate(Sender: TObject);
+procedure TFormEditAppConfig.FormDeactivate(Sender: TObject);
 begin
     Hide;
 end;
 
-procedure TFormEditAppConfigToml.FormShow(Sender: TObject);
+procedure TFormEditAppConfig.FormShow(Sender: TObject);
 begin
     RichEdit1.Text :=  MainSvcApi.getAppConfigYaml;
 end;
 
-procedure TFormEditAppConfigToml.RichEdit1Change(Sender: TObject);
+procedure TFormEditAppConfig.RichEdit1Change(Sender: TObject);
 begin
     ToolButton2.Enabled := true;
 end;
 
-procedure TFormEditAppConfigToml.ToolButton2Click(Sender: TObject);
+procedure TFormEditAppConfig.ToolButton2Click(Sender: TObject);
 var
     ASelStart : integer;
 begin
@@ -62,7 +62,7 @@ begin
      ToolButton2.Enabled := false;
 end;
 
-procedure TFormEditAppConfigToml.ToolButton3Click(Sender: TObject);
+procedure TFormEditAppConfig.ToolButton3Click(Sender: TObject);
 var
     ASelStart : integer;
 begin
