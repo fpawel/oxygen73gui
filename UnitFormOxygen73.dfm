@@ -88,6 +88,19 @@ object FormOxygen73: TFormOxygen73
       Caption = 'Panel4'
       ShowCaption = False
       TabOrder = 1
+      object GroupBox2: TGroupBox
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
+        Width = 387
+        Height = 551
+        Align = alClient
+        Caption = #1040#1088#1093#1080#1074' '#1075#1088#1072#1092#1080#1082#1086#1074
+        TabOrder = 0
+        ExplicitLeft = 0
+        ExplicitTop = 250
+        ExplicitHeight = 105
+      end
     end
     object PanelBottom: TPanel
       Left = 0
@@ -649,24 +662,11 @@ object FormOxygen73: TFormOxygen73
     end
     object N1: TMenuItem
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
-      object N4: TMenuItem
-        Caption = #1054#1089#1085#1086#1074#1085#1099#1077
-        ImageIndex = 1
-        OnClick = N4Click
-      end
-      object N5: TMenuItem
-        Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077
-        ImageIndex = 0
-        OnClick = N5Click
-      end
+      OnClick = N1Click
     end
-    object N2: TMenuItem
-      Caption = #1054#1082#1085#1086
-      object N3: TMenuItem
-        Caption = #1050#1086#1085#1089#1086#1083#1100
-        ImageIndex = 2
-        OnClick = N3Click
-      end
+    object N3: TMenuItem
+      Caption = #1050#1086#1085#1089#1086#1083#1100
+      OnClick = N3Click
     end
   end
 end

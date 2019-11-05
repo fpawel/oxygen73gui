@@ -31,16 +31,14 @@ type
         Splitter1: TSplitter;
         MainMenu1: TMainMenu;
         N1: TMenuItem;
-        N2: TMenuItem;
         N3: TMenuItem;
-        N4: TMenuItem;
-        N5: TMenuItem;
         N6: TMenuItem;
         N7: TMenuItem;
         N8: TMenuItem;
         Panel7: TPanel;
         Panel8: TPanel;
         N9: TMenuItem;
+    GroupBox2: TGroupBox;
         procedure FormShow(Sender: TObject);
         procedure Splitter1Moved(Sender: TObject);
         procedure Splitter2Moved(Sender: TObject);
@@ -50,10 +48,9 @@ type
         procedure FormCreate(Sender: TObject);
         procedure N6Click(Sender: TObject);
         procedure N8Click(Sender: TObject);
-        procedure N4Click(Sender: TObject);
-        procedure N5Click(Sender: TObject);
         procedure N9Click(Sender: TObject);
         procedure N3Click(Sender: TObject);
+    procedure N1Click(Sender: TObject);
     private
         { Private declarations }
         FEnableCopyData: Boolean;
@@ -129,11 +126,20 @@ begin
 
     with FormCatalogue do
     begin
-        Parent := Panel4;
+        Parent := GroupBox2;
         Font.Assign(Self.Font);
         BorderStyle := bsNone;
         Align := alClient;
         ReloadData;
+        Show;
+    end;
+
+    with FormAppConfig do
+    begin
+        Parent := Panel4;
+        Font.Assign(Self.Font);
+        BorderStyle := bsNone;
+        Align := alTop;
         Show;
     end;
 
@@ -205,6 +211,7 @@ procedure TFormOxygen73.FormMouseWheel(Sender: TObject; Shift: TShiftState;
   WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
 begin
     FormChart.ChangeAxisOrder(GetVCLControlAtPos(Self, MousePos), WheelDelta);
+
 end;
 
 procedure TFormOxygen73.Splitter1Moved(Sender: TObject);
@@ -257,23 +264,17 @@ begin
     Panel8.ShowHint := true;
 end;
 
+procedure TFormOxygen73.N1Click(Sender: TObject);
+begin
+    FormEditAppConfig.Position := poScreenCenter;
+    FormEditAppConfig.ShowModal;
+end;
+
 procedure TFormOxygen73.N3Click(Sender: TObject);
 begin
     FormConsole.Position := poScreenCenter;
     FormConsole.Show;
 
-end;
-
-procedure TFormOxygen73.N4Click(Sender: TObject);
-begin
-    FormAppConfig.Position := poScreenCenter;
-    FormAppConfig.ShowModal;
-end;
-
-procedure TFormOxygen73.N5Click(Sender: TObject);
-begin
-    FormEditAppConfig.Position := poScreenCenter;
-    FormEditAppConfig.ShowModal;
 end;
 
 procedure TFormOxygen73.N6Click(Sender: TObject);

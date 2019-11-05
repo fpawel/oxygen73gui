@@ -23,6 +23,7 @@ type
         procedure FormDeactivate(Sender: TObject);
         procedure FormShow(Sender: TObject);
         procedure ComboBoxComportChange(Sender: TObject);
+    procedure ComboBoxComportDropDown(Sender: TObject);
     private
         { Private declarations }
         FEnableOnEdit: boolean;
@@ -65,6 +66,11 @@ end;
 procedure setupCB(cb: TComboBox; s: string);
 begin
     cb.ItemIndex := cb.Items.IndexOf(s);
+end;
+
+procedure TFormAppConfig.ComboBoxComportDropDown(Sender: TObject);
+begin
+    FormShow(self);
 end;
 
 procedure TFormAppConfig.FormCreate(Sender: TObject);

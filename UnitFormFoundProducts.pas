@@ -6,7 +6,7 @@ uses
     Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
     System.Classes, Vcl.Graphics,
     Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.Grids, apitypes,
-    Thrift.Collections, Vcl.ExtCtrls, UnitFormChart, UnitMeasurement;
+    Thrift.Collections, Vcl.ExtCtrls, UnitFormChart, UnitMeasurement, vclutils;
 
 type
     TFormFoundProducts = class(TForm)
@@ -18,13 +18,16 @@ type
           Rect: TRect; State: TGridDrawState);
         procedure StringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
           var CanSelect: Boolean);
+    procedure FormMouseWheel(Sender: TObject; Shift: TShiftState;
+      WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     private
         { Private declarations }
         FProductBuckets: IThriftList<IProductBucket>;
-        FFormChart: TFormChart;
+
         FSelectedIProductBucket:IProductBucket;
     public
         { Public declarations }
+        FFormChart: TFormChart;
         procedure Upload(serial: Integer);
         procedure HandleMeasurements(ms: TProductMeasurements);
     end;
@@ -44,19 +47,21 @@ var
 begin
     with StringGrid1 do
     begin
-        ColCount := 6;
-        Cells[0, 0] := 'ЭХЯ';
-        Cells[1, 0] := 'Место';
-        Cells[2, 0] := 'Партия';
-        Cells[3, 0] := 'Загрузка';
-        Cells[4, 0] := 'Начало';
-        Cells[5, 0] := 'Конец';
-        ColWidths[0] := 30;
-        ColWidths[1] := 50;
-        ColWidths[2] := 70;
-        ColWidths[3] := 120;
+        ColCount := 7;
+        Cells[0, 0] := 'График';
+        Cells[1, 0] := 'ЭХЯ';
+        Cells[2, 0] := 'Место';
+        Cells[3, 0] := 'Партия';
+        Cells[4, 0] := 'Загрузка';
+        Cells[5, 0] := 'Начало';
+        Cells[6, 0] := 'Конец';
+        ColWidths[0] := 40;
+        ColWidths[1] := 30;
+        ColWidths[2] := 50;
+        ColWidths[3] := 70;
         ColWidths[4] := 120;
         ColWidths[5] := 120;
+        ColWidths[6] := 120;
     end;
     FFormChart := nil;
     FSelectedIProductBucket := nil;
@@ -146,7 +151,7 @@ var
     function fmtdt(t: TTimeUnixMillis; inch: int64): string;
     begin
         result := FormatDateTime('dd/mm/yy hh:nn',
-          IncHour(unixMillisToDateTime(p.PartyCreatedAt), inch));
+          IncHour(unixMillisToDateTime(t), inch));
     end;
 
 begin
@@ -161,22 +166,29 @@ begin
         for I := 0 to FProductBuckets.Count - 1 do
         begin
             p := FProductBuckets[I];
-            Cells[0, I + 1] := IntToStr(p.ProductID);
-            Cells[1, I + 1] := IntToStr(p.Place);
-            Cells[2, I + 1] := IntToStr(p.PartyID);
-            Cells[3, I + 1] := fmtdt(p.PartyCreatedAt, 0);
+            Cells[0, I + 1] := IntToStr(p.BucketID);
+            Cells[1, I + 1] := IntToStr(p.ProductID);
+            Cells[2, I + 1] := IntToStr(p.Place);
+            Cells[3, I + 1] := IntToStr(p.PartyID);
+            Cells[4, I + 1] := fmtdt(p.PartyCreatedAt, 0);
 
-            Cells[4, I + 1] := fmtdt(p.BucketCreatedAt, -3);
-            Cells[5, I + 1] := fmtdt(p.BucketUpdatedAt, -3);
+            Cells[5, I + 1] := fmtdt(p.BucketCreatedAt, -3);
+            Cells[6, I + 1] := fmtdt(p.BucketUpdatedAt, -3);
         end;
         StringGrid_SetupColumnsWidth(StringGrid1);
         Width := ColWidths[0] + ColWidths[1] + ColWidths[2] + ColWidths[3] +
-          ColWidths[4] + ColWidths[5] + 10;
+          ColWidths[4] + ColWidths[5] + ColWidths[6] + 10;
     end;
     Caption := 'Поиск ЭХЯ ' + IntToStr(serial);
 
     StringGrid1SelectCell(StringGrid1, 0, StringGrid1.Row, CanSelect);
 
+end;
+
+procedure TFormFoundProducts.FormMouseWheel(Sender: TObject; Shift: TShiftState;
+  WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+begin
+    FFormChart.ChangeAxisOrder(GetVCLControlAtPos(Self, MousePos), WheelDelta);
 end;
 
 procedure TFormFoundProducts.HandleMeasurements(ms: TProductMeasurements);

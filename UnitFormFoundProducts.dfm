@@ -13,6 +13,7 @@ object FormFoundProducts: TFormFoundProducts
   OldCreateOrder = False
   WindowState = wsMaximized
   OnCreate = FormCreate
+  OnMouseWheel = FormMouseWheel
   PixelsPerInch = 96
   TextHeight = 18
   object Splitter1: TSplitter
@@ -59,7 +60,5 @@ object FormFoundProducts: TFormFoundProducts
     BevelOuter = bvNone
     Caption = #1047#1072#1075#1088#1091#1078#1072#1102#1090#1089#1103' '#1076#1072#1085#1085#1099#1077' '#1075#1088#1072#1092#1080#1082#1072
     TabOrder = 1
-    ExplicitLeft = 0
-    ExplicitHeight = 41
   end
 end
