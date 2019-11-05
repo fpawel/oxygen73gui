@@ -212,6 +212,7 @@ object FormChart: TFormChart
     TabOrder = 1
     ExplicitTop = 39
     DefaultCanvas = 'TGDIPlusCanvas'
+    ColorPaletteIndex = 13
   end
   object ImageList1: TImageList
     ColorDepth = cd32Bit

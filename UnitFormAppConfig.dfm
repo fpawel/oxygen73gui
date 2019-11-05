@@ -4,7 +4,7 @@ object FormAppConfig: TFormAppConfig
   BorderStyle = bsNone
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
   ClientHeight = 114
-  ClientWidth = 335
+  ClientWidth = 207
   Color = clWindow
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object FormAppConfig: TFormAppConfig
     AlignWithMargins = True
     Left = 5
     Top = 5
-    Width = 325
+    Width = 197
     Height = 104
     Margins.Left = 5
     Margins.Top = 5
@@ -30,22 +30,21 @@ object FormAppConfig: TFormAppConfig
     Align = alClient
     Caption = #1057#1054#1052' '#1087#1086#1088#1090#1099
     TabOrder = 0
-    ExplicitWidth = 319
-    ExplicitHeight = 108
+    ExplicitWidth = 325
     object Panel1: TPanel
       Left = 2
       Top = 23
-      Width = 321
+      Width = 193
       Height = 38
       Align = alTop
       BevelOuter = bvNone
       BorderWidth = 1
       TabOrder = 0
-      ExplicitWidth = 315
+      ExplicitWidth = 321
       object Shape1: TShape
         Left = 1
         Top = 36
-        Width = 319
+        Width = 191
         Height = 1
         Align = alBottom
         Pen.Color = cl3DLight
@@ -56,7 +55,7 @@ object FormAppConfig: TFormAppConfig
       object Panel2: TPanel
         Left = 1
         Top = 1
-        Width = 200
+        Width = 104
         Height = 35
         Align = alLeft
         Alignment = taRightJustify
@@ -65,9 +64,9 @@ object FormAppConfig: TFormAppConfig
         TabOrder = 1
       end
       object ComboBoxComport: TComboBox
-        Left = 210
+        Left = 111
         Top = 4
-        Width = 98
+        Width = 74
         Height = 26
         Style = csOwnerDrawFixed
         Font.Charset = DEFAULT_CHARSET
@@ -89,28 +88,30 @@ object FormAppConfig: TFormAppConfig
     object Panel17: TPanel
       Left = 2
       Top = 61
-      Width = 321
+      Width = 193
       Height = 38
       Align = alTop
       BevelOuter = bvNone
       BorderWidth = 1
       TabOrder = 1
-      ExplicitWidth = 315
+      ExplicitWidth = 321
       object Panel18: TPanel
         Left = 1
         Top = 1
-        Width = 200
+        Width = 104
         Height = 36
         Align = alLeft
         Alignment = taRightJustify
         BevelOuter = bvNone
-        Caption = #1044#1072#1090#1095#1080#1082' '#1074#1083#1072#1078#1085#1086#1089#1090#1080
+        Caption = #1044#1072#1090#1095#1080#1082' '#1074#1083#1072#1075#1080
         TabOrder = 0
+        ExplicitLeft = 0
+        ExplicitTop = 4
       end
       object ComboBoxComportHumidity: TComboBox
-        Left = 210
+        Left = 111
         Top = 4
-        Width = 98
+        Width = 74
         Height = 26
         Style = csOwnerDrawFixed
         Font.Charset = DEFAULT_CHARSET

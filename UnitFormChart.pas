@@ -221,8 +221,12 @@ begin
 
         for i := ser.FirstValueIndex to ser.LastValueIndex do
         begin
-            xPos := ser.CalcXPos(i);
-            yPos := ser.CalcYPos(i);
+            try
+                xPos := ser.CalcXPos(i);
+                yPos := ser.CalcYPos(i);
+            except
+                continue;
+            end;
 
             if not PtInRect(Chart1.ChartRect, Point(xPos, yPos)) then
                 Continue;
