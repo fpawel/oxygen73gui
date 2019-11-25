@@ -30,7 +30,6 @@ object FormAppConfig: TFormAppConfig
     Align = alClient
     Caption = #1057#1054#1052' '#1087#1086#1088#1090#1099
     TabOrder = 0
-    ExplicitWidth = 325
     object Panel1: TPanel
       Left = 2
       Top = 23
@@ -40,7 +39,6 @@ object FormAppConfig: TFormAppConfig
       BevelOuter = bvNone
       BorderWidth = 1
       TabOrder = 0
-      ExplicitWidth = 321
       object Shape1: TShape
         Left = 1
         Top = 36
@@ -94,7 +92,6 @@ object FormAppConfig: TFormAppConfig
       BevelOuter = bvNone
       BorderWidth = 1
       TabOrder = 1
-      ExplicitWidth = 321
       object Panel18: TPanel
         Left = 1
         Top = 1
@@ -105,8 +102,6 @@ object FormAppConfig: TFormAppConfig
         BevelOuter = bvNone
         Caption = #1044#1072#1090#1095#1080#1082' '#1074#1083#1072#1075#1080
         TabOrder = 0
-        ExplicitLeft = 0
-        ExplicitTop = 4
       end
       object ComboBoxComportHumidity: TComboBox
         Left = 111

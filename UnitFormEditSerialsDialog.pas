@@ -129,20 +129,22 @@ end;
 
 procedure TFormEditSerialsDialog.SetupStringGrid;
 Var
-    c, r: Integer;
+    n, c, r: Integer;
     p: IProduct;
 begin
+    n := 0;
     with StringGrid1 do
     begin
         for c := 0 to 4 do
         begin
             for r := 0 to 9 do
             begin
-                p := FProducts[c * 5 + r];
+                p := FProducts[n];
                 if p.Serial <> 0 then
                     Cells[c, r] := inttostr(p.Serial)
                 else
                     Cells[c, r] := '';
+                Inc(n);
             end;
         end;
     end;
