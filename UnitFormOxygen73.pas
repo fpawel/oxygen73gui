@@ -38,7 +38,9 @@ type
         Panel7: TPanel;
         Panel8: TPanel;
         N9: TMenuItem;
-    GroupBox2: TGroupBox;
+        GroupBox2: TGroupBox;
+        PanelMessageBox: TPanel;
+        ImageInfo: TImage;
         procedure FormShow(Sender: TObject);
         procedure Splitter1Moved(Sender: TObject);
         procedure Splitter2Moved(Sender: TObject);
@@ -50,7 +52,8 @@ type
         procedure N8Click(Sender: TObject);
         procedure N9Click(Sender: TObject);
         procedure N3Click(Sender: TObject);
-    procedure N1Click(Sender: TObject);
+        procedure N1Click(Sender: TObject);
+        procedure FormResize(Sender: TObject);
     private
         { Private declarations }
         FEnableCopyData: Boolean;
@@ -191,13 +194,17 @@ begin
             HandleStatusComportHum(TJsonCD.unmarshal<TStatusMessage>(Message));
         cdcNewMeasurements:
             FormCatalogue.HandleNewMeasurements
-              (TMeasurements.Deserialize(cd.lpData));
+              (TMeasurements.deserialize(cd.lpData));
         cdcMeasurements:
-            FormCatalogue.HandleMeasurements
-              (TMeasurements.Deserialize(cd.lpData));
+            begin
+                FormCatalogue.HandleMeasurements
+                  (TMeasurements.deserialize(cd.lpData));
+                PanelMessageBox.Hide;
+                PanelMain.Enabled := true;
+            end;
         cdcProductMeasurements:
             FormFoundProducts.HandleMeasurements
-              (TProductMeasurements.Deserialize(cd.lpData));
+              (TProductMeasurements.deserialize(cd.lpData));
         cdcErrorOccurred:
             begin
                 AppException(Self, Exception.Create(getCopyDataStr(Message)));
@@ -212,6 +219,16 @@ procedure TFormOxygen73.FormMouseWheel(Sender: TObject; Shift: TShiftState;
 begin
     FormChart.ChangeAxisOrder(GetVCLControlAtPos(Self, MousePos), WheelDelta);
 
+end;
+
+procedure TFormOxygen73.FormResize(Sender: TObject);
+begin
+    if PanelMessageBox.Visible then
+    begin
+        PanelMessageBox.Left := ClientWidth div 2 - PanelMessageBox.Width div 2;
+        PanelMessageBox.Top := ClientHeight div 2 -
+          PanelMessageBox.Height div 2;
+    end;
 end;
 
 procedure TFormOxygen73.Splitter1Moved(Sender: TObject);

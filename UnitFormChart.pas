@@ -32,8 +32,8 @@ type
     private
         { Private declarations }
         FAxisTemp, FAxisPress, FAxisHum: TChartAxis;
-        procedure SetActiveSeries(ser: TFastLineSeries);
-        function GetActiveSeries: TFastLineSeries;
+        //procedure SetActiveSeries(ser: TFastLineSeries);
+        //function GetActiveSeries: TFastLineSeries;
         procedure ShowCurrentScaleValues;
 
     public
@@ -48,8 +48,8 @@ type
         procedure UpdateRightAxis;
         procedure Save;
 
-        property ActiveSeries: TFastLineSeries read GetActiveSeries
-          write SetActiveSeries;
+//        property ActiveSeries: TFastLineSeries read GetActiveSeries
+//          write SetActiveSeries;
 
     end;
 
@@ -95,8 +95,8 @@ begin
     FAxisPress.Title.Show;
     FAxisPress.Title.Position := TAxisTitlePosition.tpEnd;
     FAxisPress.Title.Font.Size := 11;
-    FAxisPress.Title.Font.Color := clBlue;
-    FAxisPress.LabelsFont.Color := clBlue;
+    FAxisPress.Title.Font.Color := clGreen;
+    FAxisPress.LabelsFont.Color := clGreen;
 
     FAxisHum := TChartAxis.Create(Chart1);
     FAxisHum.OtherSide := true;
@@ -107,8 +107,8 @@ begin
     FAxisHum.Title.Show;
     FAxisHum.Title.Position := TAxisTitlePosition.tpEnd;
     FAxisHum.Title.Font.Size := 11;
-    FAxisHum.Title.Font.Color := $00A8974E;
-    FAxisHum.LabelsFont.Color := $00A8974E;
+    FAxisHum.Title.Font.Color := clBlue;
+    FAxisHum.LabelsFont.Color := clBlue;
 
     ser := TFastLineSeries.Create(nil);
     ser.XValues.DateTime := true;
@@ -131,6 +131,7 @@ begin
         ser := TFastLineSeries.Create(nil);
         ser.XValues.DateTime := true;
         ser.Title := Format('%02d', [i]);
+        ser.Pen.Width := 3;
         Chart1.AddSeries(ser);
         FSeriesPlace[i - 1] := ser;
     end;
@@ -200,7 +201,6 @@ var
     end;
 
 begin
-
     ShowCurrentScaleValues;
 
     if (not ToolButton1.Down) and (not ToolButton3.Down) then
@@ -278,9 +278,9 @@ begin
         end;
     end;
 
-    ser := ActiveSeries;
-    if not Assigned(ser) then
-        exit;
+    //ser := ActiveSeries;
+//    if not Assigned(ser) then
+//        exit;
 
 end;
 
@@ -293,35 +293,37 @@ begin
     FAxisHum.Automatic := true;
 end;
 
-procedure TFormChart.SetActiveSeries(ser: TFastLineSeries);
-var
-    s: TChartSeries;
-begin
-    for s in Chart1.SeriesList do
-    begin
-        if s <> ser then
-        begin
-            s.Tag := 0;
-            (s as TFastLineSeries).LinePen.Width := 1;
-        end
-        else
-        begin
-            s.Tag := 1;
-            (s as TFastLineSeries).LinePen.Width := 4;
-        end;
-    end;
-end;
+//procedure TFormChart.SetActiveSeries(ser: TFastLineSeries);
+//var
+//    s: TChartSeries;
+//begin
+//    for s in Chart1.SeriesList do
+//    begin
+//        if s <> ser then
+//        begin
+//            s.Tag := 0;
+//            if (s as TFastLineSeries).LinePen.Width <> 1 then
+//                (s as TFastLineSeries).LinePen.Width := 1;
+//        end
+//        else
+//        begin
+//            s.Tag := 1;
+//            if (s as TFastLineSeries).LinePen.Width <> 4 then
+//                (s as TFastLineSeries).LinePen.Width := 4;
+//        end;
+//    end;
+//end;
 
-function TFormChart.GetActiveSeries: TFastLineSeries;
-var
-    s: TChartSeries;
-begin
-    for s in Chart1.SeriesList do
-
-        if s.Tag > 0 then
-            exit(s as TFastLineSeries);
-    exit(nil);
-end;
+//function TFormChart.GetActiveSeries: TFastLineSeries;
+//var
+//    s: TChartSeries;
+//begin
+//    for s in Chart1.SeriesList do
+//
+//        if s.Tag > 0 then
+//            exit(s as TFastLineSeries);
+//    exit(nil);
+//end;
 
 procedure TFormChart.ShowCurrentScaleValues;
 var

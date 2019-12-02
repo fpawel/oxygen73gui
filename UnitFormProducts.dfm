@@ -55,5 +55,16 @@ object FormProducts: TFormProducts
       Caption = #1057#1082#1088#1099#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1075#1088#1072#1092#1080#1082#1080
       OnClick = N2Click
     end
+    object N5: TMenuItem
+      Caption = '-'
+    end
+    object N4: TMenuItem
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1075#1088#1072#1092#1080#1082#1080
+      OnClick = N4Click
+    end
+    object N3: TMenuItem
+      Caption = #1057#1082#1088#1099#1090#1100' '#1074#1089#1077' '#1075#1088#1072#1092#1080#1082#1080
+      OnClick = N3Click
+    end
   end
 end

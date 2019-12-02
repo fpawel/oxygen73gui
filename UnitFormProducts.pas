@@ -14,6 +14,9 @@ type
         PopupMenu1: TPopupMenu;
         N1: TMenuItem;
         N2: TMenuItem;
+        N3: TMenuItem;
+    N4: TMenuItem;
+    N5: TMenuItem;
         procedure FormCreate(Sender: TObject);
         procedure StringGrid1DrawCell(Sender: TObject; ACol, ARow: Integer;
           Rect: TRect; State: TGridDrawState);
@@ -22,6 +25,8 @@ type
         procedure StringGrid1MouseDown(Sender: TObject; Button: TMouseButton;
           Shift: TShiftState; X, Y: Integer);
         procedure N2Click(Sender: TObject);
+        procedure N3Click(Sender: TObject);
+    procedure N4Click(Sender: TObject);
     private
         { Private declarations }
         FProducts: IThriftList<IProduct>;
@@ -35,7 +40,7 @@ type
 
     public
         { Public declarations }
-        procedure SetParty(APartyID: int64; AProducts:IThriftList<IProduct>);
+        procedure SetParty(APartyID: int64; AProducts: IThriftList<IProduct>);
         procedure RedrawPlace(APlace: Integer);
         procedure RedrawAmbient;
 
@@ -88,17 +93,48 @@ begin
                             FormChart.FSeriesHum.Active := b;
                     end;
                 end;
-                Cells[c,r] := Cells[c,r];
+                Cells[c, r] := Cells[c, r];
             end;
 
     end;
     FormChart.UpdateRightAxis;
 end;
 
-procedure TFormProducts.SetParty(APartyID: int64; AProducts:IThriftList<IProduct>);
+procedure TFormProducts.N3Click(Sender: TObject);
+var
+    place: Integer;
+begin
+    for place := 0 to 49 do
+    begin
+        FormChart.FSeriesPlace[place].Active := false;
+        RedrawPlace(Place);
+    end;
+    FormChart.FSeriesTemp.Active := false;
+    FormChart.FSeriesPress.Active := false;
+    FormChart.FSeriesHum.Active := false;
+    RedrawAmbient;
+end;
+
+procedure TFormProducts.N4Click(Sender: TObject);
+var
+    place: Integer;
+begin
+    for place := 0 to 49 do
+    begin
+        FormChart.FSeriesPlace[place].Active := true;
+        RedrawPlace(Place);
+    end;
+    FormChart.FSeriesTemp.Active := true;
+    FormChart.FSeriesPress.Active := true;
+    FormChart.FSeriesHum.Active := true;
+    RedrawAmbient;
+end;
+
+procedure TFormProducts.SetParty(APartyID: int64;
+  AProducts: IThriftList<IProduct>);
 begin
     FPartyID := APartyID;
-    FProducts := AProducts; //MainSvcApi.listProducts(APartyID);
+    FProducts := AProducts; // MainSvcApi.listProducts(APartyID);
     SetupStringGrid;
 end;
 
@@ -197,7 +233,7 @@ procedure TFormProducts.StringGrid1MouseDown(Sender: TObject;
 var
     ACol, ARow: Integer;
     ser: TFastLineSeries;
-    count_right_axis:integer;
+    count_right_axis: Integer;
 begin
     if (GetAsyncKeyState(VK_LBUTTON) >= 0) then
         exit;
@@ -210,13 +246,12 @@ begin
 
     FormChart.UpdateRightAxis;
 
-
 end;
 
 procedure TFormProducts.StringGrid1SelectCell(Sender: TObject;
   ACol, ARow: Integer; var CanSelect: Boolean);
 begin
-    FormChart.ActiveSeries := CellSeries(ACol, ARow);
+    //FormChart.ActiveSeries := CellSeries(ACol, ARow);
 
 end;
 

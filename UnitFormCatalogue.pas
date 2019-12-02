@@ -96,10 +96,12 @@ procedure TFormCatalogue.HandleMeasurements(ms: TMeasurements);
 var
     I: Integer;
     value: double;
-    m: TMeasurement;
+
     buk: IBucket;
     CreatedAt, UpdatedAt: TDateTime;
+    m: TMeasurement;
 begin
+
     buk := self.SelectedBucket;
     if not Assigned(buk) or (buk.BucketID <> ms.BucketID) then
         exit;
@@ -110,12 +112,18 @@ begin
         FormChart.FSeriesPlace[I].Clear;
     CreatedAt := IncHour(unixMillisToDateTime(buk.CreatedAt), -3);
     UpdatedAt := IncHour(unixMillisToDateTime(buk.UpdatedAt), -3);
+
+    FormChart.hide;
     for m in ms.Measurements do
+    begin
         if (m.StoredAt >= CreatedAt) and (m.StoredAt <= UpdatedAt) then
             FormChart.AddMeasurement(m);
+    end;
+    FormProducts.RedrawAmbient;
     for I := 0 to 49 do
         FormProducts.RedrawPlace(I);
-    FormProducts.RedrawAmbient;
+    FormChart.show;
+
 end;
 
 function TFormCatalogue.getLastBucket: IBucket;
@@ -255,6 +263,14 @@ begin
     products := MainSvcApi.listProducts(party.PartyID);
     FormProducts.SetParty(party.PartyID, products);
     MainSvcApi.requestMeasurements(FSelectedBucket.BucketID);
+
+    FormOxygen73.PanelMessageBox.Caption :=
+        Format('Открывается график %d', [FSelectedBucket.BucketID]);
+    FormOxygen73.PanelMain.Enabled := false;
+    FormOxygen73.PanelMessageBox.Show;
+    FormOxygen73.PanelMessageBox.BringToFront;
+    FormOxygen73.OnResize(FormOxygen73);
+
 
 end;
 
