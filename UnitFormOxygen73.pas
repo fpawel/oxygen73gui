@@ -133,7 +133,7 @@ begin
         Font.Assign(Self.Font);
         BorderStyle := bsNone;
         Align := alClient;
-        ReloadData;
+        //ReloadData;
         Show;
     end;
 
