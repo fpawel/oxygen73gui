@@ -29,11 +29,12 @@ type
         procedure Chart1AfterDraw(Sender: TObject);
         procedure ToolButton1Click(Sender: TObject);
         procedure ToolButton3Click(Sender: TObject);
+        procedure Chart1BeforeDrawChart(Sender: TObject);
     private
         { Private declarations }
         FAxisTemp, FAxisPress, FAxisHum: TChartAxis;
-        //procedure SetActiveSeries(ser: TFastLineSeries);
-        //function GetActiveSeries: TFastLineSeries;
+        // procedure SetActiveSeries(ser: TFastLineSeries);
+        // function GetActiveSeries: TFastLineSeries;
         procedure ShowCurrentScaleValues;
 
     public
@@ -48,8 +49,8 @@ type
         procedure UpdateRightAxis;
         procedure Save;
 
-//        property ActiveSeries: TFastLineSeries read GetActiveSeries
-//          write SetActiveSeries;
+        // property ActiveSeries: TFastLineSeries read GetActiveSeries
+        // write SetActiveSeries;
 
     end;
 
@@ -62,18 +63,45 @@ implementation
 
 uses dateutils, math, System.Types, UnitAppIni;
 
+procedure setOptimizedChart(c: TChart);
+begin
+    c.ClipPoints := False;
+    c.Title.Visible := False;
+    c.Legend.Visible := False;
+    c.View3D := False;
+    c.Axes.FastCalc := True;
+end;
+
+procedure setOptimizedAxis(a: TChartAxis);
+begin
+    a.Axis.Width := 1;
+    a.RoundFirstLabel := False;
+end;
+
+procedure setOptimizedSeries(ser: TFastLineSeries);
+begin
+    ser.LinePen.OwnerCriticalSection := nil;
+    ser.AutoRepaint := False;
+    ser.FastPen := True;
+    ser.DrawAllPoints := False;
+end;
+
 procedure TFormChart.FormCreate(Sender: TObject);
 var
     ser: TFastLineSeries;
     i: Integer;
 
 begin
+    setOptimizedChart(Chart1);
 
     ser := TFastLineSeries.Create(nil);
-    ser.XValues.DateTime := true;
+    ser.XValues.DateTime := True;
     ser.Title := 'T,"C';
     ser.VertAxis := aRightAxis;
+    setOptimizedSeries(ser);
+
     Chart1.AddSeries(ser);
+
     FSeriesTemp := ser;
 
     FAxisTemp := Chart1.RightAxis;
@@ -85,9 +113,10 @@ begin
     FAxisTemp.Title.Font.Size := 11;
     FAxisTemp.Title.Font.Color := clRed;
     FAxisTemp.LabelsFont.Color := clRed;
+    setOptimizedAxis(FAxisTemp);
 
     FAxisPress := TChartAxis.Create(Chart1);
-    FAxisPress.OtherSide := true;
+    FAxisPress.OtherSide := True;
     FAxisPress.PositionUnits := muPixels;
     FAxisPress.PositionPercent := -80;
     FAxisPress.Grid.Hide;
@@ -97,9 +126,10 @@ begin
     FAxisPress.Title.Font.Size := 11;
     FAxisPress.Title.Font.Color := clGreen;
     FAxisPress.LabelsFont.Color := clGreen;
+    setOptimizedAxis(FAxisPress);
 
     FAxisHum := TChartAxis.Create(Chart1);
-    FAxisHum.OtherSide := true;
+    FAxisHum.OtherSide := True;
     FAxisHum.PositionUnits := muPixels;
     FAxisHum.PositionPercent := -160;
     FAxisHum.Grid.Hide;
@@ -109,29 +139,35 @@ begin
     FAxisHum.Title.Font.Size := 11;
     FAxisHum.Title.Font.Color := clBlue;
     FAxisHum.LabelsFont.Color := clBlue;
+    setOptimizedAxis(FAxisHum);
 
     ser := TFastLineSeries.Create(nil);
-    ser.XValues.DateTime := true;
+    ser.XValues.DateTime := True;
     ser.Title := 'P,לל.נע.סע.';
     ser.VertAxis := aRightAxis;
-    Chart1.AddSeries(ser);
     ser.CustomVertAxis := FAxisPress;
+    setOptimizedSeries(ser);
+
+    Chart1.AddSeries(ser);
+
     FSeriesPress := ser;
 
     ser := TFastLineSeries.Create(nil);
-    ser.XValues.DateTime := true;
+    ser.XValues.DateTime := True;
     ser.Title := 'H,%';
     ser.VertAxis := aRightAxis;
-    Chart1.AddSeries(ser);
     ser.CustomVertAxis := FAxisHum;
+    setOptimizedSeries(ser);
+    Chart1.AddSeries(ser);
+
     FSeriesHum := ser;
 
     for i := 1 to 50 do
     begin
         ser := TFastLineSeries.Create(nil);
-        ser.XValues.DateTime := true;
+        ser.XValues.DateTime := True;
         ser.Title := Format('%02d', [i]);
-        ser.Pen.Width := 3;
+        setOptimizedSeries(ser);
         Chart1.AddSeries(ser);
         FSeriesPlace[i - 1] := ser;
     end;
@@ -139,7 +175,7 @@ begin
     for i := 0 to Chart1.SeriesCount - 1 do
     begin
         Chart1.Series[i].Active := AppIni.ReadBool('series.active',
-          inttostr(i), false);
+          inttostr(i), False);
     end;
     UpdateRightAxis;
 end;
@@ -225,7 +261,7 @@ begin
                 xPos := ser.CalcXPos(i);
                 yPos := ser.CalcYPos(i);
             except
-                continue;
+                Continue;
             end;
 
             if not PtInRect(Chart1.ChartRect, Point(xPos, yPos)) then
@@ -263,7 +299,7 @@ begin
             begin
                 if System.Types.IntersectRect(marker_rect, r2) then
                 begin
-                    marker_place := false;
+                    marker_place := False;
                     break;
                 end;
             end;
@@ -278,52 +314,59 @@ begin
         end;
     end;
 
-    //ser := ActiveSeries;
-//    if not Assigned(ser) then
-//        exit;
+    // ser := ActiveSeries;
+    // if not Assigned(ser) then
+    // exit;
 
+end;
+
+procedure TFormChart.Chart1BeforeDrawChart(Sender: TObject);
+begin
+    // When using only a single thread, disable locking:
+    Chart1.Canvas.ReferenceCanvas.Pen.OwnerCriticalSection := nil;
+    // Series1.LinePen.OwnerCriticalSection := nil;
 end;
 
 procedure TFormChart.Chart1UndoZoom(Sender: TObject);
 begin
-    Chart1.BottomAxis.Automatic := true;
-    Chart1.LeftAxis.Automatic := true;
-    FAxisTemp.Automatic := true;
-    FAxisTemp.Automatic := true;
-    FAxisHum.Automatic := true;
+    Chart1.BottomAxis.Automatic := True;
+    Chart1.LeftAxis.Automatic := True;
+    FAxisTemp.Automatic := True;
+    FAxisTemp.Automatic := True;
+    FAxisHum.Automatic := True;
 end;
 
-//procedure TFormChart.SetActiveSeries(ser: TFastLineSeries);
-//var
-//    s: TChartSeries;
-//begin
-//    for s in Chart1.SeriesList do
-//    begin
-//        if s <> ser then
-//        begin
-//            s.Tag := 0;
-//            if (s as TFastLineSeries).LinePen.Width <> 1 then
-//                (s as TFastLineSeries).LinePen.Width := 1;
-//        end
-//        else
-//        begin
-//            s.Tag := 1;
-//            if (s as TFastLineSeries).LinePen.Width <> 4 then
-//                (s as TFastLineSeries).LinePen.Width := 4;
-//        end;
-//    end;
-//end;
+// procedure TFormChart.SetActiveSeries(ser: TFastLineSeries);
+// var
+// s: TChartSeries;
+// begin
+// for s in Chart1.SeriesList do
+// begin
+// if s <> ser then
+// begin
+// s.Tag := 0;
+// if (s as TFastLineSeries).LinePen.Width <> 1 then
+// (s as TFastLineSeries).LinePen.Width := 1;
+// end
+// else
+// begin
+// s.Tag := 1;
+// if (s as TFastLineSeries).LinePen.Width <> 4 then
+// (s as TFastLineSeries).LinePen.Width := 4;
+// end;
+// end;
+// end;
 
-//function TFormChart.GetActiveSeries: TFastLineSeries;
-//var
-//    s: TChartSeries;
-//begin
-//    for s in Chart1.SeriesList do
+// function TFormChart.GetActiveSeries: TFastLineSeries;
+// var
+// s: TChartSeries;
+// begin
+// for s in Chart1.SeriesList do
 //
-//        if s.Tag > 0 then
-//            exit(s as TFastLineSeries);
-//    exit(nil);
-//end;
+// if s.Tag > 0 then
+// exit(s as TFastLineSeries);
+// exit(nil);
+// end;
 
 procedure TFormChart.ShowCurrentScaleValues;
 var
@@ -376,14 +419,14 @@ end;
 procedure TFormChart.ToolButton1Click(Sender: TObject);
 begin
     if ToolButton1.Down then
-        ToolButton3.Down := false;
+        ToolButton3.Down := False;
     Chart1.Repaint;
 end;
 
 procedure TFormChart.ToolButton3Click(Sender: TObject);
 begin
     if ToolButton3.Down then
-        ToolButton1.Down := false;
+        ToolButton1.Down := False;
     Chart1.Repaint;
 end;
 

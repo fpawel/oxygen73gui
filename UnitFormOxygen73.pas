@@ -41,6 +41,7 @@ type
         GroupBox2: TGroupBox;
         PanelMessageBox: TPanel;
         ImageInfo: TImage;
+    N2: TMenuItem;
         procedure FormShow(Sender: TObject);
         procedure Splitter1Moved(Sender: TObject);
         procedure Splitter2Moved(Sender: TObject);
@@ -54,6 +55,7 @@ type
         procedure N3Click(Sender: TObject);
         procedure N1Click(Sender: TObject);
         procedure FormResize(Sender: TObject);
+    procedure N2Click(Sender: TObject);
     private
         { Private declarations }
         FEnableCopyData: Boolean;
@@ -88,7 +90,7 @@ type
 
     TCopyDataCmd = (cdcWriteConsole, cdcStatusComport, cdcStatusComportHum,
       cdcNewMeasurements, cdcMeasurements, cdcProductMeasurements,
-      cdcErrorOccurred);
+      cdcErrorOccurred, cdcVacuumBegin, cdcVacuumEnd);
 
 function getCopyDataStr(Message: TMessage): string;
 var
@@ -133,7 +135,7 @@ begin
         Font.Assign(Self.Font);
         BorderStyle := bsNone;
         Align := alClient;
-        //ReloadData;
+        // ReloadData;
         Show;
     end;
 
@@ -208,6 +210,19 @@ begin
         cdcErrorOccurred:
             begin
                 AppException(Self, Exception.Create(getCopyDataStr(Message)));
+            end;
+        cdcVacuumBegin:
+            begin
+                PanelMessageBox.Caption := 'Выполняется дефрагментация';
+                PanelMain.Enabled := false;
+                PanelMessageBox.Show;
+                PanelMessageBox.BringToFront;
+                OnResize(Self);
+            end;
+        cdcVacuumEnd:
+            begin
+                PanelMessageBox.Hide;
+                PanelMain.Enabled := true;
             end;
     else
         raise Exception.Create('wrong message: ' + IntToStr(Message.WParam));
@@ -285,6 +300,11 @@ procedure TFormOxygen73.N1Click(Sender: TObject);
 begin
     FormEditAppConfig.Position := poScreenCenter;
     FormEditAppConfig.ShowModal;
+end;
+
+procedure TFormOxygen73.N2Click(Sender: TObject);
+begin
+    MainSvcApi.vacuum;
 end;
 
 procedure TFormOxygen73.N3Click(Sender: TObject);

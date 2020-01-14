@@ -206,12 +206,11 @@ object FormChart: TFormChart
     RightAxis.TitleSize = 11
     View3D = False
     OnAfterDraw = Chart1AfterDraw
+    OnBeforeDrawChart = Chart1BeforeDrawChart
     Align = alClient
     BevelOuter = bvNone
     Color = clWindow
     TabOrder = 1
-    ExplicitLeft = 1
-    ExplicitTop = 39
     DefaultCanvas = 'TGDIPlusCanvas'
     ColorPaletteIndex = -2
     ColorPalette = (

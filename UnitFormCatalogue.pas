@@ -60,17 +60,19 @@ begin
 
 	with StringGrid1 do
 	begin
-		ColCount := 5;
+		ColCount := 6;
 		Cells[0, 0] := 'День';
 		Cells[1, 0] := 'Начало';
 		Cells[2, 0] := 'Конец';
 		Cells[3, 0] := 'Партия';
 		Cells[4, 0] := 'Загрузка';
+        Cells[5, 0] := 'График';
 		ColWidths[0] := 40;
 		ColWidths[1] := 70;
 		ColWidths[2] := 70;
 		ColWidths[3] := 70;
 		ColWidths[4] := 120;
+        ColWidths[5] := 80;
 	end;
 end;
 
@@ -183,6 +185,7 @@ begin
 				  TimeToStr(IncHour(unixMillisToDateTime(UpdatedAt), -3));
 				Cells[3, I + 1] := IntToStr(PartyID);
 				Cells[4, I + 1] := formatPartyTime(PartyCreatedAt);
+                Cells[5, I + 1] := IntToStr(BucketID);
 			end;
 		if prevRowIsLast then
 			Row := RowCount - 1;
