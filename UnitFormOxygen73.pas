@@ -41,7 +41,7 @@ type
         GroupBox2: TGroupBox;
         PanelMessageBox: TPanel;
         ImageInfo: TImage;
-    N2: TMenuItem;
+        N2: TMenuItem;
         procedure FormShow(Sender: TObject);
         procedure Splitter1Moved(Sender: TObject);
         procedure Splitter2Moved(Sender: TObject);
@@ -55,7 +55,7 @@ type
         procedure N3Click(Sender: TObject);
         procedure N1Click(Sender: TObject);
         procedure FormResize(Sender: TObject);
-    procedure N2Click(Sender: TObject);
+        procedure N2Click(Sender: TObject);
     private
         { Private declarations }
         FEnableCopyData: Boolean;
@@ -67,6 +67,9 @@ type
     public
         { Public declarations }
         procedure AppException(Sender: TObject; e: Exception);
+        procedure ShowModalPanel(AText: string);
+        procedure HideModalPanel;
+
     end;
 
 var
@@ -197,36 +200,41 @@ begin
         cdcNewMeasurements:
             FormCatalogue.HandleNewMeasurements
               (TMeasurements.deserialize(cd.lpData));
+
         cdcMeasurements:
-            begin
-                FormCatalogue.HandleMeasurements
-                  (TMeasurements.deserialize(cd.lpData));
-                PanelMessageBox.Hide;
-                PanelMain.Enabled := true;
-            end;
+            FormCatalogue.HandleMeasurements
+              (TMeasurements.deserialize(cd.lpData));
+
         cdcProductMeasurements:
             FormFoundProducts.HandleMeasurements
               (TProductMeasurements.deserialize(cd.lpData));
+
         cdcErrorOccurred:
-            begin
-                AppException(Self, Exception.Create(getCopyDataStr(Message)));
-            end;
+            AppException(Self, Exception.Create(getCopyDataStr(Message)));
+
         cdcVacuumBegin:
-            begin
-                PanelMessageBox.Caption := 'Выполняется дефрагментация';
-                PanelMain.Enabled := false;
-                PanelMessageBox.Show;
-                PanelMessageBox.BringToFront;
-                OnResize(Self);
-            end;
+            ShowModalPanel('Выполняется дефрагментация');
+
         cdcVacuumEnd:
-            begin
-                PanelMessageBox.Hide;
-                PanelMain.Enabled := true;
-            end;
+            HideModalPanel;
     else
         raise Exception.Create('wrong message: ' + IntToStr(Message.WParam));
     end;
+end;
+
+procedure TFormOxygen73.ShowModalPanel(AText: string);
+begin
+    PanelMessageBox.Caption := AText;
+    PanelMain.Enabled := false;
+    PanelMessageBox.Show;
+    PanelMessageBox.BringToFront;
+    OnResize(Self);
+end;
+
+procedure TFormOxygen73.HideModalPanel;
+begin
+    PanelMessageBox.Hide;
+    PanelMain.Enabled := true;
 end;
 
 procedure TFormOxygen73.FormMouseWheel(Sender: TObject; Shift: TShiftState;

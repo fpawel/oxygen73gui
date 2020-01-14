@@ -84,6 +84,7 @@ begin
     ser.AutoRepaint := False;
     ser.FastPen := True;
     ser.DrawAllPoints := False;
+    ser.LinePen.Width := 2;
 end;
 
 procedure TFormChart.FormCreate(Sender: TObject);
