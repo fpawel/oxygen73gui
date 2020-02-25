@@ -52,6 +52,8 @@ type
         // property ActiveSeries: TFastLineSeries read GetActiveSeries
         // write SetActiveSeries;
 
+        procedure optimizeChart;
+
     end;
 
 var
@@ -63,47 +65,23 @@ implementation
 
 uses dateutils, math, System.Types, UnitAppIni;
 
-procedure setOptimizedChart(c: TChart);
-begin
-    c.ClipPoints := False;
-    c.Title.Visible := False;
-    c.Legend.Visible := False;
-    c.View3D := False;
-    c.Axes.FastCalc := True;
-end;
-
-procedure setOptimizedAxis(a: TChartAxis);
-begin
-    a.Axis.Width := 1;
-    a.RoundFirstLabel := False;
-end;
-
-procedure setOptimizedSeries(ser: TFastLineSeries);
-begin
-    ser.LinePen.OwnerCriticalSection := nil;
-    ser.AutoRepaint := False;
-    ser.FastPen := True;
-    ser.DrawAllPoints := False;
-    ser.LinePen.Width := 2;
-end;
-
 procedure TFormChart.FormCreate(Sender: TObject);
 var
     ser: TFastLineSeries;
     i: Integer;
 
 begin
-    setOptimizedChart(Chart1);
 
     ser := TFastLineSeries.Create(nil);
     ser.XValues.DateTime := True;
     ser.Title := 'T,"C';
     ser.VertAxis := aRightAxis;
-    setOptimizedSeries(ser);
+    // setOptimizedSeries(ser);
 
     Chart1.AddSeries(ser);
 
     FSeriesTemp := ser;
+    FSeriesTemp.AddXY(now, 1);
 
     FAxisTemp := Chart1.RightAxis;
     FAxisTemp.PositionUnits := muPixels;
@@ -114,7 +92,6 @@ begin
     FAxisTemp.Title.Font.Size := 11;
     FAxisTemp.Title.Font.Color := clRed;
     FAxisTemp.LabelsFont.Color := clRed;
-    setOptimizedAxis(FAxisTemp);
 
     FAxisPress := TChartAxis.Create(Chart1);
     FAxisPress.OtherSide := True;
@@ -127,7 +104,6 @@ begin
     FAxisPress.Title.Font.Size := 11;
     FAxisPress.Title.Font.Color := clGreen;
     FAxisPress.LabelsFont.Color := clGreen;
-    setOptimizedAxis(FAxisPress);
 
     FAxisHum := TChartAxis.Create(Chart1);
     FAxisHum.OtherSide := True;
@@ -140,14 +116,13 @@ begin
     FAxisHum.Title.Font.Size := 11;
     FAxisHum.Title.Font.Color := clBlue;
     FAxisHum.LabelsFont.Color := clBlue;
-    setOptimizedAxis(FAxisHum);
 
     ser := TFastLineSeries.Create(nil);
     ser.XValues.DateTime := True;
     ser.Title := 'P,לל.נע.סע.';
     ser.VertAxis := aRightAxis;
     ser.CustomVertAxis := FAxisPress;
-    setOptimizedSeries(ser);
+    // setOptimizedSeries(ser);
 
     Chart1.AddSeries(ser);
 
@@ -158,7 +133,7 @@ begin
     ser.Title := 'H,%';
     ser.VertAxis := aRightAxis;
     ser.CustomVertAxis := FAxisHum;
-    setOptimizedSeries(ser);
+    // setOptimizedSeries(ser);
     Chart1.AddSeries(ser);
 
     FSeriesHum := ser;
@@ -168,7 +143,7 @@ begin
         ser := TFastLineSeries.Create(nil);
         ser.XValues.DateTime := True;
         ser.Title := Format('%02d', [i]);
-        setOptimizedSeries(ser);
+        // setOptimizedSeries(ser);
         Chart1.AddSeries(ser);
         FSeriesPlace[i - 1] := ser;
     end;
@@ -179,6 +154,37 @@ begin
           inttostr(i), False);
     end;
     UpdateRightAxis;
+end;
+
+procedure TFormChart.optimizeChart;
+var
+    i: Integer;
+    ser: TFastLineSeries;
+begin
+    // When using only a single thread, disable locking:
+    Chart1.Canvas.ReferenceCanvas.Pen.OwnerCriticalSection := nil;
+    Chart1.ClipPoints := False;
+    Chart1.Title.Visible := False;
+    Chart1.Legend.Visible := False;
+    Chart1.View3D := False;
+    Chart1.Axes.FastCalc := True;
+
+    for i := 0 to Chart1.AxesList.Count - 1 do
+    begin
+        Chart1.Axes[i].Axis.Width := 1;
+        Chart1.Axes[i].RoundFirstLabel := False;
+    end;
+
+    for i := 0 to Chart1.SeriesCount - 1 do
+    begin
+        ser := Chart1.Series[i] as TFastLineSeries;
+        ser.LinePen.OwnerCriticalSection := nil;
+        ser.AutoRepaint := False;
+        ser.FastPen := True;
+        ser.DrawAllPoints := False;
+        ser.LinePen.Width := 2;
+    end;
+
 end;
 
 procedure TFormChart.Save;
@@ -196,6 +202,7 @@ procedure TFormChart.AddMeasurement(m: TMeasurement);
 var
     i: Integer;
 begin
+
     if not IsNaN(m.Temperature) then
         FSeriesTemp.AddXY(m.StoredAt, m.Temperature);
     if not IsNaN(m.Pressure) then
@@ -323,9 +330,8 @@ end;
 
 procedure TFormChart.Chart1BeforeDrawChart(Sender: TObject);
 begin
-    // When using only a single thread, disable locking:
-    Chart1.Canvas.ReferenceCanvas.Pen.OwnerCriticalSection := nil;
-    // Series1.LinePen.OwnerCriticalSection := nil;
+    optimizeChart;
+    Chart1.OnBeforeDrawChart := nil;
 end;
 
 procedure TFormChart.Chart1UndoZoom(Sender: TObject);

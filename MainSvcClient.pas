@@ -22,7 +22,7 @@ var
     key: TRegistry;
 begin
     Transport := TSocketImpl.Create('127.0.0.1',
-      StrToInt(GetEnvironmentVariable('OXYGEN73_API_PORT')), 10000);
+      StrToInt(GetEnvironmentVariable('OXYGEN73_API_PORT')), 50000);
     Protocol := TBinaryProtocolImpl.Create(Transport);
     MainSvcApi := TMainSvc.TClient.Create(Protocol);
     Transport.Open;

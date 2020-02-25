@@ -37,9 +37,12 @@ object FormCatalogue: TFormCatalogue
     GradientEndColor = clBlack
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSelect]
     ParentFont = False
+    PopupMenu = PopupMenu1
     TabOrder = 0
     OnDrawCell = StringGrid1DrawCell
     OnSelectCell = StringGrid1SelectCell
+    ExplicitLeft = 8
+    ExplicitTop = 39
     ColWidths = (
       64
       64
@@ -81,6 +84,14 @@ object FormCatalogue: TFormCatalogue
       OnChange = ComboBox1Change
       Items.Strings = (
         '11.11.2018')
+    end
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 200
+    Top = 144
+    object MenuDelete: TMenuItem
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      OnClick = MenuDeleteClick
     end
   end
 end

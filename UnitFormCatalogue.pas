@@ -7,13 +7,15 @@ uses
     System.Classes, Vcl.Graphics,
     Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Grids,
     mainsvc, Thrift.Collections, apitypes, MainSvcClient, stringgridutils,
-    stringutils, UnitMeasurement;
+    stringutils, UnitMeasurement, Vcl.Menus;
 
 type
     TFormCatalogue = class(TForm)
         StringGrid1: TStringGrid;
         Panel1: TPanel;
         ComboBox1: TComboBox;
+    PopupMenu1: TPopupMenu;
+    MenuDelete: TMenuItem;
         procedure ComboBox1Change(Sender: TObject);
         procedure StringGrid1SelectCell(Sender: TObject; ACol, ARow: Integer;
           var CanSelect: Boolean);
@@ -21,13 +23,14 @@ type
           Rect: TRect; State: TGridDrawState);
         procedure FormCreate(Sender: TObject);
         procedure FormShow(Sender: TObject);
+    procedure MenuDeleteClick(Sender: TObject);
     private
         { Private declarations }
         FYearMonth: IThriftList<IYearMonth>;
         FSelectedBucket: IBucket;
         FBuckets: IThriftList<IBucket>;
         function getLastBucket: IBucket;
-        procedure ReloadData;
+
         procedure ReloadSelectedBucket;
     public
         { Public declarations }
@@ -37,6 +40,7 @@ type
         procedure ReloadSelectedMonth;
         procedure HandleNewMeasurements(ms: TMeasurements);
         procedure HandleMeasurements(ms: TMeasurements);
+        procedure ReloadData;
     end;
 
 var
@@ -78,7 +82,7 @@ end;
 
 procedure TFormCatalogue.FormShow(Sender: TObject);
 begin
-    ReloadData
+    //
 end;
 
 procedure TFormCatalogue.HandleNewMeasurements(ms: TMeasurements);
@@ -101,6 +105,18 @@ begin
     for I := 0 to 49 do
         FormProducts.RedrawPlace(I);
     FormProducts.RedrawAmbient;
+end;
+
+procedure TFormCatalogue.MenuDeleteClick(Sender: TObject);
+begin
+    with StringGrid1 do
+    begin
+        if Row < 1 then
+            exit;
+        MainSvcApi.deleteBucket(FBuckets[Row-1].BucketID);
+        ReloadData;
+    end;
+
 end;
 
 procedure TFormCatalogue.HandleMeasurements(ms: TMeasurements);
@@ -319,10 +335,14 @@ begin
     if ARow - 1 >= FBuckets.Count then
     begin
         FSelectedBucket := nil;
+        MenuDelete.Visible := false;
         exit;
     end;
     FSelectedBucket := FBuckets[ARow - 1];
     ReloadSelectedBucket;
+    MenuDelete.Caption := 'Удалить график '+inttostr(FSelectedBucket.BucketID);
+    MenuDelete.Visible := true;
+
 
 end;
 

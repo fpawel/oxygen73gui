@@ -139,7 +139,6 @@ begin
         BorderStyle := bsNone;
         Align := alClient;
         // ReloadData;
-        Show;
     end;
 
     with FormAppConfig do
@@ -148,7 +147,6 @@ begin
         Font.Assign(Self.Font);
         BorderStyle := bsNone;
         Align := alTop;
-        Show;
     end;
 
     with FormProducts do
@@ -158,7 +156,6 @@ begin
         BorderStyle := bsNone;
         Align := alClient;
         // SetPartyID(-1);
-        Show;
     end;
 
     with FormChart do
@@ -167,8 +164,15 @@ begin
         Font.Assign(Self.Font);
         BorderStyle := bsNone;
         Align := alClient;
-        Show;
     end;
+
+
+    FormCatalogue.Show;
+    FormAppConfig.Show;
+    FormProducts.Show;
+    FormChart.Show;
+
+    FormCatalogue.ReloadData;
 
     FEnableCopyData := true;
 
